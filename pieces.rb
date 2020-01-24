@@ -1,12 +1,13 @@
 class ChessPiece
 
-  def initialize(name=nil, color=nil, unicode=nil, default=nil)
+  def initialize(name=nil, color=nil, unicode=nil, default_symbol=nil)
     @name = name
     @moves = nil
     @unicode = unicode
     @color = color
-    @default = default
+    @default_symbol = default_symbol
   end
+  # default_symbol inplace of unicode
 
 end
 
