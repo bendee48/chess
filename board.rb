@@ -1,19 +1,19 @@
 require './pieces'
 
 class Board
-  attr_accessor :board, :col_a, :col_b, :col_c, :col_d,
-                :col_e, :col_f, :col_g, :col_h
+  attr_accessor :row_1, :row_2, :row_3, :row_4,
+                :row_5, :row_6, :row_7, :row_8
 
   def initialize
     create_board
   end
 
   def create_board
-    ("a".."h").each { |let| instance_variable_set("@col_#{let}", Array.new(8)) }
+    (1..8).each { |num| instance_variable_set("@row_#{num}", Array.new(8)) }
   end
 
   def return_board
-    [col_a, col_b, col_c, col_d, col_e, col_f, col_g, col_h]
+    [row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8]
   end
 
   def populate_board
@@ -23,6 +23,8 @@ class Board
     queen = generate_piece(1) { Queen.new('queen', 'black', '\u265B', 'Q') }
     king = generate_piece(1) { King.new('king', 'black', '\u265A', 'K') }
     pawns = generate_piece(8) { Pawn.new('pawn', 'black', '\u265F', 'P') }
+
+    ['rook', 'knight', 'bishop'].each { |x| row_1[0] = 'rook' }
 
   end
 
