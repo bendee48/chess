@@ -9,7 +9,6 @@ class ChessPiece
     @default_symbol = default_symbol
   end
   # default_symbol inplace of unicode
-
 end
 
 class Pawn < ChessPiece

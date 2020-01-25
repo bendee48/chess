@@ -16,22 +16,49 @@ class Board
     [row_1, row_2, row_3, row_4, row_5, row_6, row_7, row_8]
   end
 
+  def display_board
+    return_board.reverse_each do |row|
+      row = row.map { |piece| piece.unicode if piece.is_a?(ChessPiece) }
+      puts " %s %s %s %s %s %s %s %s" % row
+    end
+    nil
+  end
+
   def populate_board
-    rooks = generate_piece(2) { Rook.new('rook', 'black', '\u265C', 'R') }
-    knights = generate_piece(2) { Knight.new('knight', 'black', '\u265E', 'K') }
-    bishops = generate_piece(2) { Bishop.new('bishop', 'black', '\u265D', 'B') }
-    queen = generate_piece(1) { Queen.new('queen', 'black', '\u265B', 'Q') }
-    king = generate_piece(1) { King.new('king', 'black', '\u265A', 'K') }
-    pawns = generate_piece(8) { Pawn.new('pawn', 'black', '\u265F', 'P') }
-
-    ['rook', 'knight', 'bishop'].each { |x| row_1[0] = 'rook' }
-
+    populate_royalty
+    populate_pawns
   end
 
   private
 
+  
+
   def generate_piece(num)
     (1..num).map { yield }
   end
+
+  def populate_royalty
+    ['black', 'white'].each do |color|
+      [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].each_with_index do |piece, ind|
+        if color == 'black' 
+          row_1[ind] = piece.new(color)
+        else
+          row_8[ind] = piece.new(color)
+        end
+      end
+    end
+  end
   
+  def populate_pawns
+    [row_2, row_7].each do |row|
+      row.each_with_index do |_, ind|
+        if row == row_2
+          row[ind] = Pawn.new('black')
+        else
+          row[ind] = Pawn.new('white')
+        end
+      end 
+    end
+  end
+
 end
