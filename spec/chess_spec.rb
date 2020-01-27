@@ -1,11 +1,5 @@
 require './pieces'
 
-describe "#Test" do
-  it "is a test" do
-    expect(true).to eql true
-  end
-end
-
 describe "ChessPiece" do
   describe "initialize sets up Pawn object correctly" do
     let(:pawn) { Pawn.new('black') }
