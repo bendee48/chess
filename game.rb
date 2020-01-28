@@ -16,19 +16,31 @@ class Game
     # returns ^ start piece 
     # what moves it has available and verify the move is valid
     # move piece
-    if valid_pawn_move?(start, finish, player)
-      start_let, start_num = start.scan(/[a-z]|\d+/)
-      finish_let, finish_num = finish.scan(/[a-z]|\d+/)
-      board.return_board[finish_num.to_i - 1][finish_let.ord - 97] = return_piece(start)
-      board.return_board[start_num.to_i - 1][start_let.ord - 97] = "-"
+    start_piece = return_piece(start).name
+
+    case start_piece 
+    when "pawn"
+      if valid_pawn_move?(start, finish, player)
+        start_let, start_num = start.scan(/[a-z]|\d+/)
+        finish_let, finish_num = finish.scan(/[a-z]|\d+/)
+        board.return_board[finish_num.to_i - 1][finish_let.ord - 97] = return_piece(start)
+        board.return_board[start_num.to_i - 1][start_let.ord - 97] = "-"
+      else
+        puts "Sorry, invalid move."
+      end
+    when "rook"
+      let, num = start.scan(/[a-z]|\d+/)
+      valid_moves = []
+
     end
+
   end
 
   private
 
   def valid_pawn_move?(start, finish, player)
     valid_moves = possible_pawn_moves(start, player)
-    return_piece(start).name == 'pawn' && valid_moves.include?(finish)    
+    valid_moves.include?(finish)    
   end
 
   def possible_pawn_moves(start, player)
