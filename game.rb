@@ -8,22 +8,27 @@ class Game
     @board = Board.new
   end
 
-  def move(start, finish)
+  def move(start, finish, player)
     # 2 sets of coordinates 
     # check to see what piece is in that start position
     # eg "a1 a3"
-    # check that coordinates are valid first before generating moves etc
-    let, num = start.chars
-    start_place = board.return_board[num.to_i - 1][let.ord - 97]
-
+    # check that coordinates are valid first before generating moves etc 
     # returns ^ start piece 
     # what moves it has available and verify the move is valid
     # move piece
+    if valid_pawn_move?(start, finish, player)
+      start_let, start_num = start.scan(/[a-z]|\d+/)
+      finish_let, finish_num = finish.scan(/[a-z]|\d+/)
+      board.return_board[finish_num.to_i - 1][finish_let.ord - 97] = return_piece(start)
+      board.return_board[start_num.to_i - 1][start_let.ord - 97] = "-"
+    end
   end
 
-  def valid_pawn_move?(start, finish)
-    valid_moves = []
-    
+  private
+
+  def valid_pawn_move?(start, finish, player)
+    valid_moves = possible_pawn_moves(start, player)
+    return_piece(start).name == 'pawn' && valid_moves.include?(finish)    
   end
 
   def possible_pawn_moves(start, player)
@@ -53,8 +58,6 @@ class Game
     let, num = coordinates.scan(/[a-z]|\d+/)
     return "error" unless ("a".."h") === let && ("1".."8") === num
     board.return_board[num.to_i - 1][let.ord - 97]
-  end
-
-  
+  end  
   
 end
