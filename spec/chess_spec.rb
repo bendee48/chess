@@ -76,5 +76,49 @@ describe "Game" do
       expect(game.board.row_6[1]).to be_a Pawn
     end
 
+    it "isn't allowed to move sideways" do
+      game.move("f2", "f3", player)
+      game.move("f3", "g3", player)
+      expect(game.board.row_3[6]).to eql "-"
+      expect(game.board.row_3[5]).to be_a Pawn
+    end
+
+  end
+
+  describe "#move with a Rook" do
+    let(:rook) { Rook.new("black") }
+    before(:each) { game.board.row_3[3] = rook }
+
+    it "moves vertically more than 1 square" do
+      game.move("d3", "d6", player)
+      expect(game.board.row_3[3]).to eql "-"
+      expect(game.board.row_6[3]).to eql rook
+    end
+
+    it "moves horizontally more than 1 square" do
+      game.move("d3", "h3", player)
+      expect(game.board.row_3[3]).to eql "-"
+      expect(game.board.row_3[7]).to eql rook
+    end
+
+    it "isn't allowed to move past it's own pieces" do
+      game.move("d3", "d2", player)
+      expect(game.board.row_3[3]).to eql rook
+      expect(game,board.row_2[3]).to be_a Pawn
+    end
+
+    it "takes an opponents piece" do
+      game.move("d3", "d7")
+      expect(game.board.row_3[3]).to eql "-"
+      expect(game.board.row_7[3]).to eql rook
+    end
+
+    it "doesn't take the opponents king" do
+      king = King.new("white")
+      game.board.row_3[4] = king
+      game.move("d3", "e3")
+      expect(game.board.row_3[3]).to eql rook
+      expect(game.board.row_3[4]).to eql king
+    end
   end
 end
