@@ -1,5 +1,6 @@
 require './board'
 require './player'
+require 'pry'
 
 class Game
   attr_accessor :board
@@ -8,7 +9,7 @@ class Game
     @board = Board.new
   end
 
-  def move(start, finish, player)
+  def player_move(start, finish, player)
     start_piece = return_piece(start).name
 
     case start_piece
@@ -23,10 +24,20 @@ class Game
       end
     when "rook"
       valid_moves = []
-      current_square = start
 
+      current_square = start
       loop do #up
         current_square = current_square.next
+        (valid_moves << current_square; next) if return_piece(current_square) == "-"
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color
+        break if return_piece(current_square).color == player.color
+      end
+      #down
+      current_square = start
+      loop do
+        current_let, current_num = current_square.scan(/[a-z]|\d+/)
+        current_square = "#{current_let}#{current_num.to_i - 1}"
+        break if return_piece(current_square) == "error"
         (valid_moves << current_square; next) if return_piece(current_square) == "-"
         (valid_moves << current_square; break) if return_piece(current_square).color != player.color
         break if return_piece(current_square).color == player.color
@@ -38,6 +49,7 @@ class Game
         board.return_board[finish_num.to_i - 1][finish_let.ord - 97] = return_piece(start)
         board.return_board[start_num.to_i - 1][start_let.ord - 97] = "-"
       end
+
 
     end
 
