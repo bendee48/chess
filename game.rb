@@ -29,7 +29,8 @@ class Game
       loop do #up
         current_square = current_square.next
         (valid_moves << current_square; next) if return_piece(current_square) == "-"
-        (valid_moves << current_square; break) if return_piece(current_square).color != player.color
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
+                                                  return_piece(current_square).name != "king"
         break if return_piece(current_square).color == player.color
       end
       #down
@@ -39,7 +40,32 @@ class Game
         current_square = "#{current_let}#{current_num.to_i - 1}"
         break if return_piece(current_square) == "error"
         (valid_moves << current_square; next) if return_piece(current_square) == "-"
-        (valid_moves << current_square; break) if return_piece(current_square).color != player.color
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
+                                                  return_piece(current_square).name != "king"
+        break if return_piece(current_square).color == player.color
+      end
+
+      #right
+      current_square = start
+      loop do
+        current_let, current_num = current_square.scan(/[a-z]|\d+/)
+        current_square = "#{current_let.next}#{current_num}"
+        break if return_piece(current_square) == "error"
+        (valid_moves << current_square; next) if return_piece(current_square) == "-"
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
+                                                  return_piece(current_square).name != "king"
+        break if return_piece(current_square).color == player.color
+      end
+
+      #left
+      current_square = start
+      loop do
+        current_let, current_num = current_square.scan(/[a-z]|\d+/)
+        current_square = "#{(current_let.ord - 1).chr}#{current_num}"
+        break if return_piece(current_square) == "error"
+        (valid_moves << current_square; next) if return_piece(current_square) == "-"
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
+                                                  return_piece(current_square).name != "king"
         break if return_piece(current_square).color == player.color
       end
 
