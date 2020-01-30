@@ -89,21 +89,21 @@ describe "Game" do
 
   end
 
-  # describe "#move with a Rook" do
-  #   let(:rook) { Rook.new("black") }
-  #   before(:each) { game.board.row_3[3] = rook }
+  describe "#move with a Rook" do
+    let(:rook) { Rook.new("black") }
+    before(:each) { game.board.row_3[3] = rook }
 
-  #   it "moves vertically more than 1 square" do
-  #     game.move("d3", "d6", player)
-  #     expect(game.board.row_3[3]).to eql "-"
-  #     expect(game.board.row_6[3]).to eql rook
-  #   end
+    it "moves vertically more than 1 square" do
+      game.move("d3", "d6", player)
+      expect(game.board.row_3[3]).to eql "-"
+      expect(game.board.row_6[3]).to eql rook
+    end
 
-  #   it "moves horizontally more than 1 square" do
-  #     game.move("d3", "h3", player)
-  #     expect(game.board.row_3[3]).to eql "-"
-  #     expect(game.board.row_3[7]).to eql rook
-  #   end
+    # it "moves horizontally more than 1 square" do
+    #   game.move("d3", "h3", player)
+    #   expect(game.board.row_3[3]).to eql "-"
+    #   expect(game.board.row_3[7]).to eql rook
+    # end
 
   #   it "isn't allowed to move past it's own pieces" do
   #     game.move("d3", "d2", player)
@@ -124,5 +124,6 @@ describe "Game" do
   #     expect(game.board.row_3[3]).to eql rook
   #     expect(game.board.row_3[4]).to eql king
   #   end
-  # end
+
+  end
 end

@@ -9,16 +9,9 @@ class Game
   end
 
   def move(start, finish, player)
-    # 2 sets of coordinates 
-    # check to see what piece is in that start position
-    # eg "a1 a3"
-    # check that coordinates are valid first before generating moves etc 
-    # returns ^ start piece 
-    # what moves it has available and verify the move is valid
-    # move piece
     start_piece = return_piece(start).name
 
-    case start_piece 
+    case start_piece
     when "pawn"
       if valid_pawn_move?(start, finish, player)
         start_let, start_num = start.scan(/[a-z]|\d+/)
@@ -29,8 +22,22 @@ class Game
         puts "Sorry, invalid move."
       end
     when "rook"
-      let, num = start.scan(/[a-z]|\d+/)
       valid_moves = []
+      current_square = start
+
+      loop do #up
+        current_square = current_square.next
+        (valid_moves << current_square; next) if return_piece(current_square) == "-"
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color
+        break if return_piece(current_square).color == player.color
+      end
+
+      if valid_moves.include?(finish)
+        start_let, start_num = start.scan(/[a-z]|\d+/)
+        finish_let, finish_num = finish.scan(/[a-z]|\d+/)
+        board.return_board[finish_num.to_i - 1][finish_let.ord - 97] = return_piece(start)
+        board.return_board[start_num.to_i - 1][start_let.ord - 97] = "-"
+      end
 
     end
 
