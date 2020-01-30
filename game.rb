@@ -78,55 +78,31 @@ class Game
   def possible_rook_moves(start, player)
     valid_moves = []
 
-    current_square = start
-    loop do #up
-      current_let, current_num = current_square.scan(/[a-z]|\d+/)
-      current_square = "#{current_let}#{current_num.to_i + 1}"
-      break if return_piece(current_square) == "error"
-      (valid_moves << current_square; next) if return_piece(current_square) == "-"
-      (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
-                                                return_piece(current_square).name != "king"
-      break if return_piece(current_square).color == player.color
-    end
-    #down
-    current_square = start
-    loop do
-      current_let, current_num = current_square.scan(/[a-z]|\d+/)
-      current_square = "#{current_let}#{current_num.to_i - 1}"
-      break if return_piece(current_square) == "error"
-      (valid_moves << current_square; next) if return_piece(current_square) == "-"
-      (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
-                                                return_piece(current_square).name != "king"
-      break if return_piece(current_square).color == player.color
-    end
+    ['up', 'down', 'left', 'right'].each do |dir|
+      current_square = start
+      loop do
+        current_let, current_num = current_square.scan(/[a-z]|\d+/)
+        case dir
+        when "up"
+          current_square = "#{current_let}#{current_num.to_i + 1}"
+        when "down"
+          current_square = "#{current_let}#{current_num.to_i - 1}"
+        when "left"
+          current_square = "#{(current_let.ord - 1).chr}#{current_num}"
+        when "right"
+          current_square = "#{(current_let.ord + 1).chr}#{current_num}"
+        end
 
-    #right
-    current_square = start
-    loop do
-      current_let, current_num = current_square.scan(/[a-z]|\d+/)
-      current_square = "#{(current_let.ord + 1).chr}#{current_num}"
-      break if return_piece(current_square) == "error"
-      (valid_moves << current_square; next) if return_piece(current_square) == "-"
-      (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
-                                                return_piece(current_square).name != "king"
-      break if return_piece(current_square).color == player.color
-    end
-
-    #left
-    current_square = start
-    loop do
-      current_let, current_num = current_square.scan(/[a-z]|\d+/)
-      current_square = "#{(current_let.ord - 1).chr}#{current_num}"
-      break if return_piece(current_square) == "error"
-      (valid_moves << current_square; next) if return_piece(current_square) == "-"
-      (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
-                                                return_piece(current_square).name != "king"
-      break if return_piece(current_square).color == player.color
+        break if return_piece(current_square) == "error"
+        (valid_moves << current_square; next) if return_piece(current_square) == "-"
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
+                                                  return_piece(current_square).name != "king"
+        break if return_piece(current_square).color == player.color
+      end
     end
 
     valid_moves
-  end
 
-   
+  end   
   
 end
