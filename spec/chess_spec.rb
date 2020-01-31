@@ -318,7 +318,7 @@ describe "Game" do
     it "isn't allowed to move past it's own pieces" do
       game.player_move("d4", "d3", player)
       game.player_move("d3", "d2", player)
-      expect(game.board.row_3[3]).to eql queen
+      expect(game.board.row_3[3]).to eql king
     end
 
     it "takes an opponents piece" do
@@ -326,12 +326,12 @@ describe "Game" do
       game.player_move("d5", "d6", player)
       game.player_move("d6", "c7", player)
       expect(game.board.row_6[3]).to eql "-"
-      expect(game.board.row_7[2]).to eql queen     
+      expect(game.board.row_7[2]).to eql king   
     end
 
     it "doesn't take the opponents king" do
       white_king = King.new("white")
-      game.board.row_4[4] = king
+      game.board.row_4[4] = white_king
       game.player_move("d4", "e4", player)
       expect(game.board.row_4[3]).to eql king
       expect(game.board.row_4[4]).to eql white_king

@@ -45,6 +45,14 @@ class Game
       else
         puts "Sorry, invalid move."
       end
+    when "king"
+      possible_moves = possible_king_moves(start, player)
+
+      if valid_move?(possible_moves, finish)
+        move_piece(start, finish)
+      else
+        puts "Sorry, Invalid move."
+      end
     end 
   end
 
@@ -148,6 +156,34 @@ class Game
 
   def possible_queen_moves(start, player)
     possible_rook_moves(start, player) + possible_bishop_moves(start, player)
+  end
+
+  def possible_king_moves(start, player)
+    valid_moves = []
+
+    current_square = start
+    current_let, current_num = current_square.scan(/[a-z]|\d+/)
+
+    moves = { 
+      up: "#{current_let}#{current_num.to_i + 1}", 
+      up_right: "#{(current_let.ord + 1).chr}#{current_num.to_i + 1}",
+      right: "#{(current_let.ord + 1).chr}#{current_num}",
+      down_right: "#{(current_let.ord + 1).chr}#{current_num.to_i - 1}",
+      down: "#{current_let}#{current_num.to_i - 1}",
+      down_left: "#{(current_let.ord - 1).chr}#{current_num.to_i - 1}",
+      left: "#{(current_let.ord - 1).chr}#{current_num}",
+      up_left: "#{(current_let.ord - 1).chr}#{current_num.to_i + 1}"
+    }
+
+    moves.each do |_,move|
+      piece = return_piece(move)
+      if piece == "-" || ( piece.is_a?(ChessPiece) && 
+                           piece.color != player.color && piece.name != "king" )
+        valid_moves << move
+      end
+    end
+    
+    valid_moves
   end
   
 end
