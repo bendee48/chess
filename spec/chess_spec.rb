@@ -225,7 +225,7 @@ describe "Game" do
     end
 
     it "moves down diagonally left more than 1 square" do
-      game.player_move("d4", "d5")
+      game.player_move("d4", "d5", player)
       game.player_move("d5", "b3", player)
       expect(game.board.row_5[3]).to eql "-"
       expect(game.board.row_3[1]).to eql queen
@@ -258,8 +258,8 @@ describe "Game" do
       king = King.new("white")
       game.board.row_5[4] = king
       game.player_move("d4", "e5", player)
-      expect(game.board.row_3[3]).to eql queen
-      expect(game.board.row_4[4]).to eql king
+      expect(game.board.row_4[3]).to eql queen
+      expect(game.board.row_5[4]).to eql king
     end    
 
   end

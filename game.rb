@@ -37,7 +37,15 @@ class Game
       else
         puts "Sorry, invalid move."
       end
-    end
+    when "queen"
+      possible_moves = possible_queen_moves(start, player)
+
+      if valid_move?(possible_moves, finish)
+        move_piece(start, finish)
+      else
+        puts "Sorry, invalid move."
+      end
+    end 
   end
 
   private
@@ -136,6 +144,10 @@ class Game
       end
     end    
     valid_moves
+  end
+
+  def possible_queen_moves(start, player)
+    possible_rook_moves(start, player) + possible_bishop_moves(start, player)
   end
   
 end
