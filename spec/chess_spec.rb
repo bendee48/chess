@@ -139,4 +139,55 @@ describe "Game" do
     end
 
   end
+
+  # describe "#player_move with Bishop" do
+  #   let(:bishop) { Bishop.new("black") }
+  #   before(:each) { game.board.row_3[3] = bishop }
+
+  #   it "moves diagonally up and right more than 1 square" do
+  #     game.player_move("d3", "g6", player)
+  #     expect(game.board.row_3[3]).to eql "-"
+  #     expect(game.board.row_6[6]).to eql bishop
+  #   end
+
+  #   it "moves diagonally up and left more than 1 square" do
+  #     game.player_move("d3", "a6", player)
+  #     expect(game.board.row_3[3]).to eql "-"
+  #     expect(game.board.row_6[0]).to eql bishop
+  #   end
+
+  #   it "moves diagonally down and left more than 1 square" do
+  #     game.player_move("d3", "g6", player)
+  #     game.player_move("g6", "e4", player)
+  #     expect(game.board.row_6[6]).to eql "-"
+  #     expect(game.board.row_4[4]).to eql bishop
+  #   end
+
+  #   it "moves diagonally down and right more than 1 square" do
+  #     game.player_move("d3", "a6", player)
+  #     game.player_move("a6", "c4", player)
+  #     expect(game.board.row_6[0]).to eql "-"
+  #     expect(game.board.row_4[2]).to eql bishop
+  #   end
+
+  #   it "isn't allowed to move past it's own pieces" do
+  #     game.player_move("d3", "f1", player)
+  #     expect(game.board.row_3[3]).to eql bishop
+  #   end
+
+  #   it "takes an opponents piece" do
+  #     game.player_move("d3", "h7", player)
+  #     expect(game.board.row_3[3]).to eql "-"
+  #     expect(game.board.row_7[7]).to eql bishop     
+  #   end
+
+  #   it "doesn't take the opponents king" do
+  #     game.board.row_4[4] = King.new("white")
+  #     game.player_move("d3", "e4", player)
+  #     expect(game.board.row_3[3]).to eql bishop
+  #     expect(game.board.row_4[4]).to eql bishop
+  #   end
+    
+  # end
+
 end

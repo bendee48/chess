@@ -65,4 +65,6 @@ class Board
     end
   end
 
+  #add default symbol method
+
 end
