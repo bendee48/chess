@@ -29,6 +29,14 @@ class Game
       else
         puts "Sorry, invalid move."    
       end
+    when "bishop"
+      possible_moves = possible_bishop_moves(start, player)
+
+      if valid_move?(possible_moves, finish)
+        move_piece(start, finish)
+      else
+        puts "Sorry, invalid move."
+      end
     end
 
   end
@@ -100,9 +108,35 @@ class Game
         break if return_piece(current_square).color == player.color
       end
     end
-
     valid_moves
-
   end   
+
+  def possible_bishop_moves(start, player)
+    valid_moves = []
+
+    ["up_right", "up_left", "down_left", "down_right"].each do |dir|
+      current_square = start      
+      loop do        
+        current_let, current_num = current_square.scan(/[a-z]|\d+/)
+        case dir
+        when "up_right"
+          current_square = "#{(current_let.ord + 1).chr}#{current_num.to_i + 1}"
+        when "up_left"
+          current_square = "#{(current_let.ord - 1).chr}#{current_num.to_i + 1}"
+        when "down_left"
+          current_square = "#{(current_let.ord - 1).chr}#{current_num.to_i - 1}"
+        when "down_right"
+          current_square = "#{(current_let.ord + 1).chr}#{current_num.to_i - 1}"
+        end
+        
+        break if return_piece(current_square) == "error"
+        (valid_moves << current_square; next) if return_piece(current_square) == "-"
+        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
+                                                  return_piece(current_square).name != "king"
+        break if return_piece(current_square).color == player.color
+      end
+    end    
+    valid_moves
+  end
   
 end
