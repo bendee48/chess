@@ -86,7 +86,6 @@ describe "Game" do
     it "recognises invalid moves" do
       expect { game.player_move("a2", "b2", player) }.to output("Sorry, invalid move.\n").to_stdout
     end
-
   end
 
   describe "#player_move with a Rook" do
@@ -137,7 +136,6 @@ describe "Game" do
       expect(game.board.row_4[3]).to eql rook
       expect(game.board.row_4[4]).to eql king
     end
-
   end
 
   describe "#player_move with Bishop" do
@@ -187,8 +185,83 @@ describe "Game" do
       game.player_move("d3", "e4", player)
       expect(game.board.row_3[3]).to eql bishop
       expect(game.board.row_4[4]).to eql king
+    end    
+  end
+
+  describe "#player_moves with a Queen" do
+    let(:queen) { Queen.new("black") }
+    before(:each) { game.board.row_4[3] = queen }
+
+    it "moves up vertically more than 1 square" do
+      game.player_move("d4", "d6", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_6[3]).to eql queen
     end
-    
+
+    it "moves up diagonnally right more than 1 square" do
+      game.player_move("d4", "f6", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_6[5]).to eql queen
+    end
+
+    it "moves right horizontally more than 1 square" do
+      game.player_move("d4", "g4", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_4[6]).to eql queen
+    end
+
+    it "moves down diagonally right more than 1 square" do
+      game.player_move("d4", "e5", player)
+      game.player_move("e5", "g3", player)
+      expect(game.board.row_5[4]).to eql "-"
+      expect(game.board.row_3[6]).to eql queen
+    end
+
+    it "moves down more than 1 square" do
+      game.player_move("d4", "d5", player)
+      game.player_move("d5", "d3", player)
+      expect(game.board.row_5[3]).to eql "-"
+      expect(game.board.row_3[3]).to eql queen
+    end
+
+    it "moves down diagonally left more than 1 square" do
+      game.player_move("d4", "d5")
+      game.player_move("d5", "b3", player)
+      expect(game.board.row_5[3]).to eql "-"
+      expect(game.board.row_3[1]).to eql queen
+    end
+
+    it "moves left horizontally more than 1 square" do
+      game.player_move("d4", "a4", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_4[0]).to eql queen
+    end
+
+    it "moves up diagonally left more than 1 square" do
+      game.player_move("d4", "b6", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_6[1]).to eql queen
+    end
+
+    it "isn't allowed to move past it's own pieces" do
+      game.player_move("d4", "b2", player)
+      expect(game.board.row_4[3]).to eql queen
+    end
+
+    it "takes an opponents piece" do
+      game.player_move("d4", "d7", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_7[3]).to eql queen     
+    end
+
+    it "doesn't take the opponents king" do
+      king = King.new("white")
+      game.board.row_5[4] = king
+      game.player_move("d4", "e5", player)
+      expect(game.board.row_3[3]).to eql queen
+      expect(game.board.row_4[4]).to eql king
+    end    
+
   end
 
 end

@@ -38,7 +38,6 @@ class Game
         puts "Sorry, invalid move."
       end
     end
-
   end
 
   private
