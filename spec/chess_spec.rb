@@ -392,6 +392,28 @@ describe "Game" do
       expect(game.board.row_4[3]).to eql "-"
       expect(game.board.row_6[2]).to eql knight
     end
+
+    it "it jumps over it's own pieces" do
+      game.board.row_2.map! { |sq| sq = Pawn.new("black") }
+      game.player_move("b1", "c3", player)
+      expect(game.board.row_1[1]).to eql "-"
+      expect(game.board.row_3[2]).to be_a Knight
+    end
+
+    it "takes an opponents piece" do
+      game.player_move("d4", "f5", player)
+      game.player_move("f5", "e7", player)
+      expect(game.board.row_5[5]).to eql "-"
+      expect(game.board.row_7[4]).to eql knight   
+    end
+
+    it "doesn't take the opponents king" do
+      game.player_move("d4", "b5", player)
+      game.player_move("b5", "d6", player)
+      game.player_move("d6", "e8", player)
+      expect(game.board.row_6[3]).to eql knight
+      expect(game.board.row_8[4]).to be_a King
+    end    
   end
 
 end
