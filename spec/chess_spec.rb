@@ -336,7 +336,62 @@ describe "Game" do
       expect(game.board.row_4[3]).to eql king
       expect(game.board.row_4[4]).to eql white_king
     end    
+  end
 
+  describe "#player_move with a Knight" do
+    let(:knight) { Knight.new("black") }
+    before(:each) do
+      game.board.row_4[3] = knight
+      game.board.row_2.map! { |sq| sq = "-" }
+    end
+
+    it "moves 2 up, 1 right" do
+      game.player_move("d4", "e6", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_6[4]).to eql knight
+    end
+
+    it "moves 2 right, 1 up" do
+      game.player_move("d4", "f5", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_5[5]).to eql knight
+    end    
+
+    it "moves 2 right, 1 down" do
+      game.player_move("d4", "f3", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_3[5]).to eql knight
+    end
+
+    it "moves 1 right, 2 down" do
+      game.player_move("d4", "e2", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_2[4]).to eql knight
+    end
+
+    it "moves 1 left, 2 down" do
+      game.player_move("d4", "c2", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_2[2]).to eql knight
+    end
+
+    it "moves 2 left, 1 down" do
+      game.player_move("d4", "b3", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_3[1]).to eql knight
+    end
+
+    it "moves 2 left, 1 up" do
+      game.player_move("d4", "b5", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_5[1]).to eql knight
+    end
+
+    it "moves 1 left, 2 up" do
+      game.player_move("d4", "c6", player)
+      expect(game.board.row_4[3]).to eql "-"
+      expect(game.board.row_6[2]).to eql knight
+    end
   end
 
 end
