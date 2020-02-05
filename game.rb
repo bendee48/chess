@@ -10,57 +10,32 @@ class Game
   end
 
   def player_move(start, finish, player)
-    start_piece = return_piece(start).name
+    start_piece = return_piece(start)
+    if ChessPiece === start_piece
+      start_piece = start_piece.name
+    else
+      puts "No piece there."
+    end
 
     case start_piece
     when "pawn"
       possible_moves = possible_pawn_moves(start, player)
-
-      if valid_move?(possible_moves, finish)
-        move_piece(start, finish)
-      else
-        puts "Sorry, invalid move."
-      end
+      move_validated_piece(start, finish, possible_moves)      
     when "rook"
       possible_moves = possible_rook_moves(start, player)
-
-      if valid_move?(possible_moves, finish)
-        move_piece(start, finish)    
-      else
-        puts "Sorry, invalid move."    
-      end
+      move_validated_piece(start, finish, possible_moves) 
     when "bishop"
       possible_moves = possible_bishop_moves(start, player)
-
-      if valid_move?(possible_moves, finish)
-        move_piece(start, finish)
-      else
-        puts "Sorry, invalid move."
-      end
+      move_validated_piece(start, finish, possible_moves) 
     when "queen"
       possible_moves = possible_queen_moves(start, player)
-
-      if valid_move?(possible_moves, finish)
-        move_piece(start, finish)
-      else
-        puts "Sorry, invalid move."
-      end
+      move_validated_piece(start, finish, possible_moves) 
     when "king"
       possible_moves = possible_king_moves(start, player)
-
-      if valid_move?(possible_moves, finish)
-        move_piece(start, finish)
-      else
-        puts "Sorry, Invalid move."
-      end
+      move_validated_piece(start, finish, possible_moves) 
     when "knight"
       possible_moves = possible_knight_moves(start, player)
-
-      if valid_move?(possible_moves, finish)
-        move_piece(start, finish)
-      else
-        puts "Sorry, invalid move."
-      end
+      move_validated_piece(start, finish, possible_moves) 
     end 
   end
 
@@ -77,6 +52,14 @@ class Game
     finish_let, finish_num = finish.scan(/[a-z]|\d+/)
     board.return_board[finish_num.to_i - 1][finish_let.ord - 97] = return_piece(start)
     board.return_board[start_num.to_i - 1][start_let.ord - 97] = "-"
+  end
+
+  def move_validated_piece(start, finish, possible_moves)
+    if valid_move?(possible_moves, finish)
+      move_piece(start, finish)
+    else
+      puts "Sorry, invalid move."
+    end
   end
 
   def valid_move?(moves, finish)
