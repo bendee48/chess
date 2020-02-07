@@ -67,25 +67,26 @@ class Game
   end
 
   def possible_pawn_moves(start, player)
-    let, num = start.scan(/[a-z]|\d+/)
+    current_let, current_num = start.scan(/[a-z]|\d+/)
     valid_moves = []
     
     one_up = start.next
     valid_moves << one_up if return_piece(one_up) == "-"
 
     two_up = one_up.next
-    valid_moves << two_up if return_piece(two_up) == "-" && num == "2"
+    valid_moves << two_up if return_piece(two_up) == "-" && current_num == "2"
 
-    right_attack = "#{let.next}#{num.next}"
-    valid_moves << right_attack if return_piece(right_attack).is_a?(ChessPiece) && 
-                                   return_piece(right_attack).name != "king" &&
-                                   return_piece(right_attack).color != player.color
+    attacks = {right: [1,1], left: [-1, 1]}
 
-    left_attack = "#{(let.ord - 1).chr}#{num.to_i + 1}"
-    valid_moves << left_attack if return_piece(left_attack).is_a?(ChessPiece) && 
-                                  return_piece(left_attack).name != "king" &&
-                                  return_piece(left_attack).color != player.color
-
+    attacks.each do |_,nums|
+      let, num = nums
+      coord = "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
+      piece = return_piece(coord)
+      if piece.is_a?(ChessPiece) && piece.color != player.color &&
+                                    piece.name != "king"
+         valid_moves << coord 
+      end
+    end
     valid_moves
   end
 
@@ -178,10 +179,8 @@ class Game
 
   def possible_knight_moves(start, player)
     valid_moves = []
-
     current_square = start
     current_let, current_num = current_square.scan(/[a-z]|\d+/)
-
     moves = [[2,1],[1,2],[-1,2],[-2,1],[-2,-1],[-1,-2],[1,-2],[2,-1]]
 
     moves.each do |move|
