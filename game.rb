@@ -151,15 +151,26 @@ class Game
   end
 
   def possible_king_moves(start, player)
+    king_moves = { 
+              up: [0,1], up_right: [1,1], right: [1,0], down_right: [1,-1],
+              down: [0,-1], down_left: [-1,-1], left: [-1,0], up_left: [-1,1]
+            }
+    generate_setmoves(start, player, king_moves)
+  end
+
+  def possible_knight_moves(start, player)
+    knight_moves = { 
+              up_right1: [2,1], up_right2: [1,2], down_right1: [-1,2], down_right2: [-2,1],
+              left_down1: [-2,-1], left_down2: [-1,-2], up_left1: [1,-2], up_left2: [2,-1] 
+            }
+    generate_setmoves(start, player, knight_moves)
+  end
+
+  def generate_setmoves(start, player, moves)
     valid_moves = []
 
     current_square = start
     current_let, current_num = current_square.scan(/[a-z]|\d+/)
-
-    moves = { 
-              up: [0,1], up_right: [1,1], right: [1,0], down_right: [1,-1],
-              down: [0,-1], down_left: [-1,-1], left: [-1,0], up_left: [-1,1]
-            }
 
     moves.each do |_,move|
       let, num = move
@@ -170,28 +181,6 @@ class Game
         valid_moves << coord
       end
     end    
-    valid_moves
-  end
-
-  def possible_knight_moves(start, player)
-    valid_moves = []
-    current_square = start
-    current_let, current_num = current_square.scan(/[a-z]|\d+/)
-    moves = { 
-              up_right1: [2,1], up_right2: [1,2], down_right1: [-1,2], down_right2: [-2,1],
-              left_down1: [-2,-1], left_down2: [-1,-2], up_left1: [1,-2], up_left2: [2,-1] 
-            }
-
-    moves.each do |_,move|
-      let, num = move
-      coord = "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
-      piece = return_piece(coord)
-
-      if piece == "-" || ( piece.is_a?(ChessPiece) && 
-                           piece.color != player.color && piece.name != "king" )
-        valid_moves << coord
-      end
-    end
     valid_moves
   end
   
