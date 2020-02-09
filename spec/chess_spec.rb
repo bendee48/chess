@@ -88,6 +88,16 @@ describe "Game" do
     end
   end
 
+  describe "#player_move with white pawn" do
+    let(:player_white) { Player.new("Mark", "white") }
+
+    it "moves a white pawn down the board 1 square" do
+      game.player_move("d7", "d6", player_white)
+      expect(game.board.row_7[3]).to eql "-"
+      expect(game.board.row_6[3]).to be_a Pawn 
+    end
+  end
+
   describe "#player_move with a Rook" do
     let(:rook) { Rook.new("black") }
     before(:each) { game.board.row_4[3] = rook }
