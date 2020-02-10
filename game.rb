@@ -70,17 +70,32 @@ class Game
     current_let, current_num = start.scan(/[a-z]|\d+/)
     valid_moves = []
     
-    one_up = start.next
+    if player.color == "black"
+      one_up = "#{current_let}#{current_num.to_i + 1}"
+    else 
+      one_up = "#{current_let}#{current_num.to_i - 1}"
+    end
+    # one_up = start.next
     valid_moves << one_up if return_piece(one_up) == "-"
 
-    two_up = one_up.next
-    valid_moves << two_up if return_piece(two_up) == "-" && current_num == "2"
+    if player.color == "black"
+      two_up = "#{current_let}#{current_num.to_i + 2}"
+    else 
+      two_up = "#{current_let}#{current_num.to_i - 2}"
+    end
+    # two_up = one_up.next
+    valid_moves << two_up if return_piece(two_up) == "-" && current_num == "2" && player.color == "black" ||
+                             return_piece(two_up) == "-" && current_num == "7" && player.color == "white"
 
-    attacks = {right: [1,1], left: [-1, 1]}
+    attacks = { right: [1,1], left: [-1, 1] }
 
     attacks.each do |_,nums|
       let, num = nums
-      coord = "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
+      if player.color == "black"
+        coord = "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
+      else
+        coord = "#{(current_let.ord - let).chr}#{current_num.to_i - num}"
+      end
       piece = return_piece(coord)
       if piece.is_a?(ChessPiece) && piece.color != player.color &&
                                     piece.name != "king"

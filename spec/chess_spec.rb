@@ -90,11 +90,32 @@ describe "Game" do
 
   describe "#player_move with white pawn" do
     let(:player_white) { Player.new("Mark", "white") }
+    let(:pawn) { Pawn.new("white") }
 
     it "moves a white pawn down the board 1 square" do
       game.player_move("d7", "d6", player_white)
       expect(game.board.row_7[3]).to eql "-"
       expect(game.board.row_6[3]).to be_a Pawn 
+    end
+
+    it "moves a white pawn down the board 2 squares" do
+      game.player_move("e7", "e5", player_white)
+      expect(game.board.row_7[4]).to eql "-"
+      expect(game.board.row_5[4]).to be_a Pawn
+    end
+
+    it "takes a black piece to it's right" do
+      game.board.row_3[3] = pawn
+      game.player_move("d3", "c2", player_white)
+      expect(game.board.row_3[3]).to eql "-"
+      expect(game.board.row_2[2]).to eql pawn
+    end
+
+    it "doesn't allow pawn to move down if square is taken" do
+      game.board.row_3[3] = pawn
+      game.player_move("d3", "d2", player_white)
+      expect(game.board.row_3[3]).to eql pawn
+      expect(game.board.row_2[3].color).to eql "black"
     end
   end
 
