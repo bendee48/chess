@@ -72,22 +72,21 @@ class Game
     
     if player.color == "black"
       one_up = "#{current_let}#{current_num.to_i + 1}"
-    else 
-      one_up = "#{current_let}#{current_num.to_i - 1}"
-    end
-    # one_up = start.next
-    valid_moves << one_up if return_piece(one_up) == "-"
-
-    if player.color == "black"
       two_up = "#{current_let}#{current_num.to_i + 2}"
     else 
+      one_up = "#{current_let}#{current_num.to_i - 1}"
       two_up = "#{current_let}#{current_num.to_i - 2}"
     end
-    # two_up = one_up.next
+
+    valid_moves << one_up if return_piece(one_up) == "-"
     valid_moves << two_up if return_piece(two_up) == "-" && current_num == "2" && player.color == "black" ||
                              return_piece(two_up) == "-" && current_num == "7" && player.color == "white"
+    valid_moves = valid_moves + pawn_attack_moves(player, current_let, current_num)
+  end
 
+  def pawn_attack_moves(player, current_let, current_num)
     attacks = { right: [1,1], left: [-1, 1] }
+    valid_moves = []
 
     attacks.each do |_,nums|
       let, num = nums
@@ -103,7 +102,7 @@ class Game
       end
     end
     valid_moves
-  end
+  end 
 
   def possible_rook_moves(start, player)
     valid_moves = []
