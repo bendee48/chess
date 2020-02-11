@@ -3,10 +3,50 @@ require './player'
 require 'pry'
 
 class Game
-  attr_accessor :board
+  attr_accessor :board, :player1, :player2
   
   def initialize
     @board = Board.new
+    @player1 = nil
+    @player2 = nil
+  end
+
+  def play 
+    player_setup
+  end
+
+  def player_setup
+    [1,2].each do |num|
+      puts "Player #{num} please enter your name."
+      loop do
+        name = gets.chomp.strip.capitalize
+        if name.empty?
+          puts "Name can't be blank. Please try again."
+        elsif name.size > 12
+          puts "Name must be less than 12 characters. Please try again."
+        else
+          self.send("player#{num}=", Player.new(name))
+          break
+        end
+      end
+      if player1.color
+        player_color = player1.color == 'black' ? 'white' : 'black'
+        player2.color = player_color
+        puts "Thanks #{player2.name} you're #{player_color}."
+      else
+        puts "Thanks. Please choose your colour; 'black' or 'white'?"
+        loop do
+          color = gets.chomp.strip.downcase
+          if color != "black" && color != "white"
+            puts "Sorry, I didn't recognise that colour. PLease try again."
+          else
+            self.send("player#{num}").color = color
+            puts "Thanks #{player1.name}, you're #{color}."
+            break
+          end
+        end
+      end      
+    end
   end
 
   def player_move(start, finish, player)

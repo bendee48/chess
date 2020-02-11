@@ -45,6 +45,22 @@ describe "Game" do
   let(:game) { Game.new }
   let(:player) { Player.new("Dave", "black") }
 
+  describe "#player_setup" do
+    it "sets up players with correct names" do
+      allow(game).to receive(:gets).and_return("Ben", "black", "emma")
+      game.play
+      expect(game.player1.name).to eql "Ben"
+      expect(game.player2.name).to eql "Emma"
+    end
+
+    it "sets up players with their correct colours" do
+      allow(game).to receive(:gets).and_return("Ben", "black", "emma")
+      game.play
+      expect(game.player1.color).to eql 'black'
+      expect(game.player2.color).to eql 'white'
+    end
+  end
+
   describe "#player_move with Pawn" do
     it "moves a pawn 1 up and replaces the previous square with a dash" do
       game.player_move("a2", "a3", player)
