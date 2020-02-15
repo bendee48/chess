@@ -18,16 +18,27 @@ class Game
     puts "Chess."
     player_setup
     #testing
-    # players = [player1, player2].cycle
-    # loop do
-    #   player = players.next
-    #   board.display_board
-    #   puts "Make your move #{player}."
-    #   ans = gets.chomp
-    #   ans = ans.split
-    #   start, finish = ans
-    #   player_move(start, finish, player)
-    # end
+    players = [player1, player2].cycle
+    loop do
+      player = players.next
+      board.display_board
+      make_move(player)
+    end
+  end
+
+  def make_move(player)
+    loop do
+      puts "Make your move #{player.name}."
+      ans = gets.chomp
+      ans = ans.split
+      start, finish = ans
+      result = player_move(start, finish, player)
+      if result.nil?
+        redo 
+      else
+        break
+      end
+    end
   end
 
   def player_move(start, finish, player)
