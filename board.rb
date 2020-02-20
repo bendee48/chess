@@ -31,7 +31,9 @@ class Board
   private
 
   def create_board
-    (1..8).each { |num| instance_variable_set("@row_#{num}", Array.new(8, '-')) }
+    (1..8).each do |num| 
+      instance_variable_set("@row_#{num}", Array.new(8, '-'))
+    end
   end
 
   def populate_board
@@ -44,8 +46,9 @@ class Board
   end
 
   def populate_royalty
+    pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
     %w[black white].each do |color|
-      [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].each_with_index do |piece, ind|
+      pieces.each_with_index do |piece, ind|
         if color == 'black'
           row_1[ind] = piece.new(color)
         else
