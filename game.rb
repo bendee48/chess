@@ -2,8 +2,7 @@
 
 require './board'
 require './player'
-require './validate'
-require 'pry'
+require './validation'
 
 class Game
   include Validation
@@ -25,21 +24,6 @@ class Game
       player = players.next
       board.display_board
       make_move(player)
-    end
-  end
-
-  def make_move(player)
-    loop do
-      puts "Make your move #{player.name}."
-      ans = gets.chomp
-      ans = ans.split
-      start, finish = ans
-      result = player_move(start, finish, player)
-      if result.nil?
-        redo
-      else
-        break
-      end
     end
   end
 
@@ -84,6 +68,21 @@ class Game
         puts "Thanks #{player2.name} you're #{player_color}."
       else
         validate_color(num)
+      end
+    end
+  end
+
+  def make_move(player)
+    loop do
+      puts "Make your move #{player.name}."
+      ans = gets.chomp
+      ans = ans.split
+      start, finish = ans
+      result = player_move(start, finish, player)
+      if result.nil?
+        redo
+      else
+        break
       end
     end
   end
