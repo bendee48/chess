@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './pieces'
 
 class Board
@@ -20,7 +22,7 @@ class Board
     return_board.reverse_each do |row|
       row = row.map { |piece| piece.is_a?(ChessPiece) ? piece.unicode : piece }
       puts " #{num}  %s %s %s %s %s %s %s %s  #{num}" % row
-      num -= 1  
+      num -= 1
     end
     puts
     puts "    a b c d e f g h\n"
@@ -29,7 +31,7 @@ class Board
   private
 
   def create_board
-    (1..8).each { |num| instance_variable_set("@row_#{num}", Array.new(8, "-")) }
+    (1..8).each { |num| instance_variable_set("@row_#{num}", Array.new(8, '-')) }
   end
 
   def populate_board
@@ -42,9 +44,9 @@ class Board
   end
 
   def populate_royalty
-    ['black', 'white'].each do |color|
+    %w[black white].each do |color|
       [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].each_with_index do |piece, ind|
-        if color == 'black' 
+        if color == 'black'
           row_1[ind] = piece.new(color)
         else
           row_8[ind] = piece.new(color)
@@ -52,19 +54,18 @@ class Board
       end
     end
   end
-  
+
   def populate_pawns
     [row_2, row_7].each do |row|
       row.each_with_index do |_, ind|
-        if row == row_2
-          row[ind] = Pawn.new('black')
-        else
-          row[ind] = Pawn.new('white')
-        end
-      end 
+        row[ind] = if row == row_2
+                     Pawn.new('black')
+                   else
+                     Pawn.new('white')
+                   end
+      end
     end
   end
 
-  #add default symbol method
-
+  # add default symbol method
 end
