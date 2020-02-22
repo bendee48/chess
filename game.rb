@@ -7,12 +7,15 @@ require './validation'
 class Game
   include Validation
 
-  attr_accessor :board, :player1, :player2
+  attr_accessor :board, :player1, :player2,
+                :check, :check_mate
 
   def initialize
     @board = Board.new
     @player1 = nil
     @player2 = nil
+    @check = nil
+    @checkmate = nil
   end
 
   def play
@@ -24,6 +27,24 @@ class Game
       player = players.next
       board.display_board
       make_move(player)
+    end
+  end
+
+  def check?
+    # go through each row check to see if each player's piece is checking the king.
+
+  end
+
+  def check_mate?
+  end
+
+  #new create moves method, use for check maybe?
+  def create_moves(start, add_to_let, add_to_num)
+    letter, number = start.scan(/[a-z]|\d+/)
+    loop do
+      letter = (letter.ord + add_to_let).chr
+      number = number.to_i + add_to_num
+      yield("#{letter}#{number}")   
     end
   end
 
@@ -134,7 +155,7 @@ class Game
   def pawn_attack_moves(player, current_let, current_num)
     attacks = { right: [1, 1], left: [-1, 1] }
     valid_moves = []
-
+  
     attacks.each do |_, nums|
       let, num = nums
       coord = if player.color == 'black'

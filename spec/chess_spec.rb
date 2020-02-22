@@ -462,4 +462,12 @@ describe 'Game' do
       expect(game.board.row_8[4]).to be_a King
     end
   end
+
+  describe "#check?" do
+    it "returns true for a bishop checking a king" do
+      game.board.row_4[1] = Bishop.new('white')
+      game.player_move("d2", "d4", player)
+      expect(game.check?).to eql true
+    end
+  end
 end
