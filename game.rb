@@ -39,6 +39,7 @@ class Game
   end
 
   #new create moves method, use for check maybe?
+  #yields next move to block
   def create_moves(start, add_to_let, add_to_num)
     letter, number = start.scan(/[a-z]|\d+/)
     loop do
@@ -174,34 +175,31 @@ class Game
 
   def possible_rook_moves(start, player)
     valid_moves = []
+    moves = { up: [0, 1], down: [0, -1], left: [-1, 0], right: [1, 0] }
 
-    %w[up down left right].each do |dir|
-      current_square = start
-      loop do
-        current_let, current_num = current_square.scan(/[a-z]|\d+/)
-        case dir
-        when 'up'
-          current_square = "#{current_let}#{current_num.to_i + 1}"
-        when 'down'
-          current_square = "#{current_let}#{current_num.to_i - 1}"
-        when 'left'
-          current_square = "#{(current_let.ord - 1).chr}#{current_num}"
-        when 'right'
-          current_square = "#{(current_let.ord + 1).chr}#{current_num}"
+    moves.each do |__, move|
+      add_to_let, add_to_num = move
+      create_moves(start, add_to_let, add_to_num ) do |next_move|
+        piece = return_piece(next_move)
+        (valid_moves << next_move; next) if piece == '-'
+        break if break_conditions(next_move, player, piece)
+        if piece.is_a?(ChessPiece) && 
+           piece.color != player.color
+           valid_moves << next_move
+           break
         end
-
-        break if return_piece(current_square) == 'error'
-
-        if return_piece(current_square) == '-'
-          (valid_moves << current_square; next)
-        end
-        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
-                                                  return_piece(current_square).name != 'king'
-        break if return_piece(current_square).color == player.color
       end
     end
     valid_moves
   end
+
+  def break_conditions(move, player, piece)
+    !('1'..'8').include?(move[1]) || 
+    !('a'..'h').include?(move[0]) ||
+    piece.color == player.color ||
+    (piece.is_a?(King) && piece.color != player.color)
+  end
+
 
   def possible_bishop_moves(start, player)
     valid_moves = []
