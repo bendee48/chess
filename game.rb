@@ -45,6 +45,7 @@ class Game
     loop do
       letter = (letter.ord + add_to_let).chr
       number = number.to_i + add_to_num
+      break if !('a'..'h').include?(letter) || !(1..8).include?(number)
       yield("#{letter}#{number}")   
     end
   end
@@ -194,8 +195,6 @@ class Game
   end
 
   def break_conditions(move, player, piece)
-    !('1'..'8').include?(move[1]) || 
-    !('a'..'h').include?(move[0]) ||
     piece.color == player.color ||
     (piece.is_a?(King) && piece.color != player.color)
   end
