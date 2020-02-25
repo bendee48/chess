@@ -38,18 +38,6 @@ class Game
   def check_mate?
   end
 
-  #new create moves method, use for check maybe?
-  #yields next move to block
-  def create_moves(start, add_to_let, add_to_num)
-    letter, number = start.scan(/[a-z]|\d+/)
-    loop do
-      letter = (letter.ord + add_to_let).chr
-      number = number.to_i + add_to_num
-      break if !('a'..'h').include?(letter) || !(1..8).include?(number)
-      yield("#{letter}#{number}")   
-    end
-  end
-
   def player_move(start, finish, player)
     start_piece = return_piece(start)
     if ChessPiece === start_piece
@@ -80,7 +68,19 @@ class Game
     end
   end
 
-  private
+  # private
+
+  #new create moves method, use for check maybe?
+  #yields next move to block
+  def create_moves(start, add_to_let, add_to_num)
+    letter, number = start.scan(/[a-z]|\d+/)
+    loop do
+      letter = (letter.ord + add_to_let).chr
+      number = number.to_i + add_to_num
+      break if !('a'..'h').include?(letter) || !(1..8).include?(number)
+      yield("#{letter}#{number}")   
+    end
+  end
 
   def player_setup
     [1, 2].each do |num|
@@ -199,33 +199,21 @@ class Game
     (piece.is_a?(King) && piece.color != player.color)
   end
 
-
   def possible_bishop_moves(start, player)
     valid_moves = []
+    moves = { up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1] }
 
-    %w[up_right up_left down_left down_right].each do |dir|
-      current_square = start
-      loop do
-        current_let, current_num = current_square.scan(/[a-z]|\d+/)
-        case dir
-        when 'up_right'
-          current_square = "#{(current_let.ord + 1).chr}#{current_num.to_i + 1}"
-        when 'up_left'
-          current_square = "#{(current_let.ord - 1).chr}#{current_num.to_i + 1}"
-        when 'down_left'
-          current_square = "#{(current_let.ord - 1).chr}#{current_num.to_i - 1}"
-        when 'down_right'
-          current_square = "#{(current_let.ord + 1).chr}#{current_num.to_i - 1}"
+    moves.each do |__, move|
+      add_to_let, add_to_num = move
+      create_moves(start, add_to_let, add_to_num ) do |next_move|
+        piece = return_piece(next_move)
+        (valid_moves << next_move; next) if piece == '-'
+        break if break_conditions(next_move, player, piece)
+        if piece.is_a?(ChessPiece) && 
+           piece.color != player.color
+           valid_moves << next_move
+           break
         end
-
-        break if return_piece(current_square) == 'error'
-
-        if return_piece(current_square) == '-'
-          (valid_moves << current_square; next)
-        end
-        (valid_moves << current_square; break) if return_piece(current_square).color != player.color &&
-                                                  return_piece(current_square).name != 'king'
-        break if return_piece(current_square).color == player.color
       end
     end
     valid_moves
@@ -236,36 +224,68 @@ class Game
   end
 
   def possible_king_moves(start, player)
-    king_moves = {
+    valid_moves = []
+    moves = {
       up: [0, 1], up_right: [1, 1], right: [1, 0], down_right: [1, -1],
       down: [0, -1], down_left: [-1, -1], left: [-1, 0], up_left: [-1, 1]
     }
-    generate_setmoves(start, player, king_moves)
-  end
 
-  def possible_knight_moves(start, player)
-    knight_moves = {
-      up_right1: [2, 1], up_right2: [1, 2], down_right1: [-1, 2], down_right2: [-2, 1],
-      left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
-    }
-    generate_setmoves(start, player, knight_moves)
-  end
-
-  def generate_setmoves(start, player, moves)
-    valid_moves = []
-
-    current_square = start
-    current_let, current_num = current_square.scan(/[a-z]|\d+/)
-
-    moves.each do |_, move|
-      let, num = move
-      coord = "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
-      piece = return_piece(coord)
-      if piece == '-' || (piece.is_a?(ChessPiece) &&
-                           piece.color != player.color && piece.name != 'king')
-        valid_moves << coord
+    moves.each do |__, move|
+      add_to_let, add_to_num = move
+      create_moves(start, add_to_let, add_to_num ) do |next_move|
+        piece = return_piece(next_move)
+        #break instead of next for 1 move pieces
+        (valid_moves << next_move; break) if piece == '-'
+        break if break_conditions(next_move, player, piece)
+        if piece.is_a?(ChessPiece) && 
+           piece.color != player.color
+           valid_moves << next_move
+           break
+        end
       end
     end
     valid_moves
   end
+
+  def possible_knight_moves(start, player)
+    valid_moves = []
+    moves = {
+      up_right1: [2, 1], up_right2: [1, 2], down_right1: [-1, 2], down_right2: [-2, 1],
+      left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
+    }
+
+    moves.each do |__, move|
+      add_to_let, add_to_num = move
+      create_moves(start, add_to_let, add_to_num ) do |next_move|
+        piece = return_piece(next_move)
+        #break instead of next for 1 move pieces
+        (valid_moves << next_move; break) if piece == '-'
+        break if break_conditions(next_move, player, piece)
+        if piece.is_a?(ChessPiece) && 
+           piece.color != player.color
+           valid_moves << next_move
+           break
+        end
+      end
+    end
+    valid_moves
+  end
+
+  # def generate_setmoves(start, player, moves)
+  #   valid_moves = []
+
+  #   current_square = start
+  #   current_let, current_num = current_square.scan(/[a-z]|\d+/)
+
+  #   moves.each do |_, move|
+  #     let, num = move
+  #     coord = "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
+  #     piece = return_piece(coord)
+  #     if piece == '-' || (piece.is_a?(ChessPiece) &&
+  #                          piece.color != player.color && piece.name != 'king')
+  #       valid_moves << coord
+  #     end
+  #   end
+  #   valid_moves
+  # end
 end

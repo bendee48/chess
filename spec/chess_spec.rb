@@ -383,6 +383,11 @@ describe 'Game' do
       expect(game.board.row_4[3]).to eql king
       expect(game.board.row_4[4]).to eql white_king
     end
+
+    it "can't move more than 1 square" do
+      game.player_move("d4", "d6", player)
+      expect(game.board.row_6[3]).to eql '-'
+    end
   end
 
   describe '#player_move with a Knight' do
@@ -463,11 +468,11 @@ describe 'Game' do
     end
   end
 
-  describe "#check?" do
-    it "returns true for a bishop checking a king" do
-      game.board.row_4[1] = Bishop.new('white')
-      game.player_move("d2", "d4", player)
-      expect(game.check?).to eql true
-    end
-  end
+  # describe "#check?" do
+  #   it "returns true for a bishop checking a king" do
+  #     game.board.row_4[1] = Bishop.new('white')
+  #     game.player_move("d2", "d4", player)
+  #     expect(game.check?).to eql true
+  #   end
+  # end
 end
