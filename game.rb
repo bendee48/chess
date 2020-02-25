@@ -136,22 +136,50 @@ class Game
     moves.include?(finish)
   end
 
-  def possible_pawn_moves(start, player)
-    current_let, current_num = start.scan(/[a-z]|\d+/)
-    valid_moves = []
+  def break_conditions(move, player, piece)
+    piece.color == player.color ||
+    (piece.is_a?(King) && piece.color != player.color)
+  end
 
+  def possible_pawn_moves(start, player)
+    valid_moves = []
     if player.color == 'black'
-      one_up = "#{current_let}#{current_num.to_i + 1}"
-      two_up = "#{current_let}#{current_num.to_i + 2}"
+      moves = { up: [0, 1] }
     else
-      one_up = "#{current_let}#{current_num.to_i - 1}"
-      two_up = "#{current_let}#{current_num.to_i - 2}"
+      moves = { down: [0, -1] }
     end
 
-    valid_moves << one_up if return_piece(one_up) == '-'
-    valid_moves << two_up if return_piece(two_up) == '-' && current_num == '2' && player.color == 'black' ||
-                             return_piece(two_up) == '-' && current_num == '7' && player.color == 'white'
-    valid_moves += pawn_attack_moves(player, current_let, current_num)
+    moves.each do |__, move|
+      add_to_let, add_to_num = move
+      create_moves(start, add_to_let, add_to_num ) do |next_move|
+        piece = return_piece(next_move)
+        break if piece != '-'
+        if piece == '-'
+          valid_moves << next_move
+          next
+        elsif piece == '-' && current_num == '2' && player.color == 'black' ||
+              piece == '-' && current_num == '7' && player.color == 'white'
+          valid_moves << next_move
+          break
+        end
+      end
+    end
+    valid_moves
+    # current_let, current_num = start.scan(/[a-z]|\d+/)
+    # valid_moves = []
+
+    # if player.color == 'black'
+    #   one_up = "#{current_let}#{current_num.to_i + 1}"
+    #   two_up = "#{current_let}#{current_num.to_i + 2}"
+    # else
+    #   one_up = "#{current_let}#{current_num.to_i - 1}"
+    #   two_up = "#{current_let}#{current_num.to_i - 2}"
+    # end
+
+    # valid_moves << one_up if return_piece(one_up) == '-'
+    # valid_moves << two_up if return_piece(two_up) == '-' && current_num == '2' && player.color == 'black' ||
+    #                          return_piece(two_up) == '-' && current_num == '7' && player.color == 'white'
+    # valid_moves += pawn_attack_moves(player, current_let, current_num)
   end
 
   def pawn_attack_moves(player, current_let, current_num)
@@ -192,11 +220,6 @@ class Game
       end
     end
     valid_moves
-  end
-
-  def break_conditions(move, player, piece)
-    piece.color == player.color ||
-    (piece.is_a?(King) && piece.color != player.color)
   end
 
   def possible_bishop_moves(start, player)
@@ -270,22 +293,4 @@ class Game
     end
     valid_moves
   end
-
-  # def generate_setmoves(start, player, moves)
-  #   valid_moves = []
-
-  #   current_square = start
-  #   current_let, current_num = current_square.scan(/[a-z]|\d+/)
-
-  #   moves.each do |_, move|
-  #     let, num = move
-  #     coord = "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
-  #     piece = return_piece(coord)
-  #     if piece == '-' || (piece.is_a?(ChessPiece) &&
-  #                          piece.color != player.color && piece.name != 'king')
-  #       valid_moves << coord
-  #     end
-  #   end
-  #   valid_moves
-  # end
 end
