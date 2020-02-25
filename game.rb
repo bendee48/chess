@@ -68,10 +68,9 @@ class Game
     end
   end
 
-  # private
+  private
 
-  #new create moves method, use for check maybe?
-  #yields next move to block
+  #yields next possble move to block
   def create_moves(start, add_to_let, add_to_num)
     letter, number = start.scan(/[a-z]|\d+/)
     loop do
@@ -164,39 +163,28 @@ class Game
         end
       end
     end
-    valid_moves
-    # current_let, current_num = start.scan(/[a-z]|\d+/)
-    # valid_moves = []
-
-    # if player.color == 'black'
-    #   one_up = "#{current_let}#{current_num.to_i + 1}"
-    #   two_up = "#{current_let}#{current_num.to_i + 2}"
-    # else
-    #   one_up = "#{current_let}#{current_num.to_i - 1}"
-    #   two_up = "#{current_let}#{current_num.to_i - 2}"
-    # end
-
-    # valid_moves << one_up if return_piece(one_up) == '-'
-    # valid_moves << two_up if return_piece(two_up) == '-' && current_num == '2' && player.color == 'black' ||
-    #                          return_piece(two_up) == '-' && current_num == '7' && player.color == 'white'
-    # valid_moves += pawn_attack_moves(player, current_let, current_num)
+    valid_moves += pawn_attack_moves(start, player)
   end
 
-  def pawn_attack_moves(player, current_let, current_num)
-    attacks = { right: [1, 1], left: [-1, 1] }
+  def pawn_attack_moves(start, player)
     valid_moves = []
-  
-    attacks.each do |_, nums|
-      let, num = nums
-      coord = if player.color == 'black'
-                "#{(current_let.ord + let).chr}#{current_num.to_i + num}"
-              else
-                "#{(current_let.ord - let).chr}#{current_num.to_i - num}"
-              end
-      piece = return_piece(coord)
-      if piece.is_a?(ChessPiece) && piece.color != player.color &&
-         piece.name != 'king'
-         valid_moves << coord
+    if player.color == 'black'
+      moves = { right: [1, 1], left: [-1, 1] }
+    else
+      moves = { right: [-1, -1], left: [1, -1] }
+    end
+
+    moves.each do |__, move|
+      add_to_let, add_to_num = move
+      create_moves(start, add_to_let, add_to_num ) do |next_move|
+        piece = return_piece(next_move)
+        if piece.is_a?(ChessPiece) && piece.color != player.color &&
+          piece.name != 'king'
+          valid_moves << next_move
+          break
+        else
+          break
+        end
       end
     end
     valid_moves
