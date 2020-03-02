@@ -8,7 +8,7 @@ class Game
   include Validation
 
   attr_accessor :board, :player1, :player2,
-                :check, :check_mate
+                :check, :check_mate, :check_moves
 
   def initialize
     @board = Board.new
@@ -16,6 +16,7 @@ class Game
     @player2 = nil
     @check = nil
     @checkmate = nil
+    @check_moves = []
   end
 
   def play
@@ -30,9 +31,25 @@ class Game
     end
   end
 
-  def check?
-    # go through each row check to see if each player's piece is checking the king.
+  def check?(player)
+    
+  end
 
+  def find_king(player)
+    board.return_board.each_with_index do |row, ind|
+      let = row.find_index do |piece| 
+              next unless piece.is_a?(ChessPiece)
+              piece.is_a?(King) && piece.color == player.color
+            end
+      return [let, ind] if let
+    end
+  end
+
+  def return_coords(indices)
+    let, num = indices
+    let = (let + 97).chr
+    num = num + 1
+    "#{let}#{num}"
   end
 
   def check_mate?
