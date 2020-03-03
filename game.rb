@@ -8,12 +8,14 @@ class Game
   include Validation
 
   attr_accessor :board, :player1, :player2,
-                :check, :check_mate, :check_moves
+                :check, :check_mate, :check_moves,
+                :last_move
 
   def initialize
     @board = Board.new
     @player1 = nil
     @player2 = nil
+    @last_move = nil
     # @check = nil
     # @checkmate = nil
     # @check_moves = []
@@ -27,6 +29,7 @@ class Game
     loop do
       player = players.next
       board.display_board
+      puts "You're in check" if check?(player)
       make_move(player)
     end
   end
@@ -105,12 +108,14 @@ class Game
 
   def player_move(start, finish, player)
     start_piece = return_piece(start)
-    if ChessPiece === start_piece
-      start_piece = start_piece.name
+    if start_piece == '-'
+      puts "No piece there."
+    elsif start_piece.color != player.color
+      puts "Not your piece to move."
     else
-      puts 'No piece there.'
+      start_piece = start_piece.name
     end
-
+   
     case start_piece
     when 'pawn'
       possible_moves = possible_pawn_moves(start, player)
@@ -168,6 +173,12 @@ class Game
       result = player_move(start, finish, player)
       if result.nil?
         redo
+      elsif check?(player)
+        puts "Can't move there. You're in check."
+        # Move the last piece back
+        start, finish = last_move
+        move_piece(finish, start)
+        redo
       else
         break
       end
@@ -191,6 +202,7 @@ class Game
   def move_validated_piece(start, finish, possible_moves)
     if valid_move?(possible_moves, finish)
       move_piece(start, finish)
+      self.last_move = [start, finish]
     else
       puts 'Sorry, invalid move.'
     end
