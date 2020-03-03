@@ -480,5 +480,11 @@ describe 'Game' do
       game.board.row_5[4] = Rook.new('white')
       expect(game.check?(player)).to eql true
     end
+
+    it "returns true for a knight checking a king" do
+      game.board.row_3[5] = Knight.new('white')
+      game.board.display_board
+      expect(game.check?(player)).to eql true
+    end
   end
 end

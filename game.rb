@@ -53,6 +53,19 @@ class Game
         return true if %w(rook queen).include?(piece.name) && piece.color != player.color
       end
     end
+    # knight check
+    knight_check = {
+      up_right1: [2, 1], up_right2: [1, 2], down_right1: [-1, 2], down_right2: [-2, 1],
+      left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
+    }
+    knight_check.each do |__, move|
+      create_moves(king_coords, *move) do |next_move|
+        piece = return_piece(next_move)
+        break if piece == '-'
+        break if piece.is_a?(ChessPiece) && piece.color == player.color
+        return true if %w(knight).include?(piece.name) && piece.color != player.color
+      end
+    end
     false
   end
 
