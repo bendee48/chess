@@ -474,5 +474,11 @@ describe 'Game' do
       game.player_move("d2", "d4", player)
       expect(game.check?(player)).to eql true
     end
+
+    it "returns true for a rook checking a king" do
+      game.board.row_2[4] = '-'
+      game.board.row_5[4] = Rook.new('white')
+      expect(game.check?(player)).to eql true
+    end
   end
 end

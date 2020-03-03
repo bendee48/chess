@@ -14,9 +14,9 @@ class Game
     @board = Board.new
     @player1 = nil
     @player2 = nil
-    @check = nil
-    @checkmate = nil
-    @check_moves = []
+    # @check = nil
+    # @checkmate = nil
+    # @check_moves = []
   end
 
   def play
@@ -33,14 +33,24 @@ class Game
 
   def check?(player)
     king_coords = return_coords(find_king(player))
-    # just for diagonal moves
+    # diagonal check
     diagonal_check = { up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1] }
     diagonal_check.each do |__, move|
       create_moves(king_coords, *move) do |next_move|
         piece = return_piece(next_move)
-        next true if piece == '-'
+        next if piece == '-'
         break if piece.is_a?(ChessPiece) && piece.color == player.color
         return true if %w(bishop queen).include?(piece.name) && piece.color != player.color
+      end
+    end
+    # horizontal and vertical check
+    horiz_vert_check = { up: [0, 1], down: [0, -1], left: [-1, 0], right: [1, 0] }
+    horiz_vert_check.each do |__, move|
+      create_moves(king_coords, *move) do |next_move|
+        piece = return_piece(next_move)
+        next if piece == '-'
+        break if piece.is_a?(ChessPiece) && piece.color == player.color
+        return true if %w(rook queen).include?(piece.name) && piece.color != player.color
       end
     end
     false
