@@ -45,6 +45,7 @@ end
 describe 'Game' do
   let(:game) { Game.new }
   let(:player) { Player.new('Dave', 'black') }
+  let(:player2) { Player.new('Emma', 'white') }
 
   # describe "#player_setup" do
   #   it "sets up players with correct names" do
@@ -485,6 +486,16 @@ describe 'Game' do
       game.board.row_3[5] = Knight.new('white')
       game.board.display_board
       expect(game.check?(player)).to eql true
+    end
+
+    it "returns true for a pawn checking a king" do
+      game.board.row_1[4] = '-'
+      game.board.row_8[4] = '-'
+      game.board.row_3[3] = King.new('white')
+      game.board.row_6[3] = King.new('black')
+      game.board.display_board
+      expect(game.check?(player)).to eql true
+      expect(game.check?(player2)).to eql true
     end
   end
 end
