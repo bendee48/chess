@@ -24,7 +24,6 @@ class Game
   def play
     puts 'Chess.'
     player_setup
-    # testing
     players = [player1, player2].cycle
     loop do
       player = players.next
@@ -107,14 +106,16 @@ class Game
   end
 
   def player_move(start, finish, player)
-    start_piece = return_piece(start)
-    if start_piece == '-'
-      puts "No piece there."
-    elsif start_piece.color != player.color
-      puts "Not your piece to move."
-    else
-      start_piece = start_piece.name
-    end
+    # start_piece = return_piece(start)
+    # if start_piece == '-'
+    #   puts "No piece there."
+    # elsif start_piece.color != player.color
+    #   puts "Not your piece to move."
+    # else
+    #   start_piece = start_piece.name
+    # end
+
+    start_piece = validate_player_move(start, player)
    
     case start_piece
     when 'pawn'
@@ -174,15 +175,18 @@ class Game
       if result.nil?
         redo
       elsif check?(player)
-        puts "Can't move there. You're in check."
-        # Move the last piece back
-        start, finish = last_move
-        move_piece(finish, start)
+        puts "Can't move there. You'll be in check."
+        reverse_move(start, finish)
         redo
       else
         break
       end
     end
+  end
+
+  def reverse_move(start, finish)
+    start, finish = last_move
+    move_piece(finish, start)
   end
 
   def return_piece(coordinates)
