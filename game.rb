@@ -246,14 +246,16 @@ class Game
 
     moves.each do |__, move|
       add_to_let, add_to_num = move
+      current_num = start[1].to_i
       create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = return_piece(next_move)
         break if piece != '-'
-        if piece == '-'
-          valid_moves << next_move
-          next
-        elsif piece == '-' && current_num == '2' && player.color == 'black' ||
-              piece == '-' && current_num == '7' && player.color == 'white'
+        if piece == '-' && current_num == 2 && player.color == 'black' ||
+           piece = '-' && current_num == 7 && player.color == 'white'
+           valid_moves << next_move
+           current_num += 1
+           next
+        else
           valid_moves << next_move
           break
         end
