@@ -34,6 +34,7 @@ class Game
   end
 
   def check?(player)
+    #refactor with blocks
     king_coords = return_coords(find_king(player))
     # diagonal check
     diagonal_check = { up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1] }
@@ -102,7 +103,30 @@ class Game
     "#{let}#{num}"
   end
 
-  def check_mate?
+  def check_mate?(player)
+    board.return_board.each_with_index do |row, ind|
+      row.each_with_index do |sq, i|
+        next if !sq.is_a?(ChessPiece)
+        next if sq.color != player.color
+        case sq.name
+        when 'pawn'
+          start = return_coords([i, ind])
+          possible_moves = possible_pawn_moves(start, player)
+          p possible_moves
+        # when 'rook'
+        #   possible_moves = possible_rook_moves(start, player)
+        # when 'bishop'
+        #   possible_moves = possible_bishop_moves(start, player)
+        # when 'queen'
+        #   possible_moves = possible_queen_moves(start, player)
+        # when 'king'
+        #   possible_moves = possible_king_moves(start, player)
+        # when 'knight'
+        #   possible_moves = possible_knight_moves(start, player)
+        end
+      end
+    end
+    nil
   end
 
   def player_move(start, finish, player)
