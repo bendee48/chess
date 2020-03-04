@@ -28,6 +28,7 @@ class Game
     loop do
       player = players.next
       board.display_board
+      puts "Game Over" if check_mate?(player)
       puts "You're in check" if check?(player)
       make_move(player)
     end
@@ -112,17 +113,21 @@ class Game
         when 'pawn'
           start = return_coords([i, ind])
           possible_moves = possible_pawn_moves(start, player)
-          p possible_moves
-        # when 'rook'
-        #   possible_moves = possible_rook_moves(start, player)
-        # when 'bishop'
-        #   possible_moves = possible_bishop_moves(start, player)
-        # when 'queen'
-        #   possible_moves = possible_queen_moves(start, player)
-        # when 'king'
-        #   possible_moves = possible_king_moves(start, player)
-        # when 'knight'
-        #   possible_moves = possible_knight_moves(start, player)
+        when 'rook'
+          start = return_coords([i, ind])
+          possible_moves = possible_rook_moves(start, player) 
+        when 'bishop'
+          start = return_coords([i, ind])
+          possible_moves = possible_bishop_moves(start, player)
+        when 'queen'
+          start = return_coords([i, ind])
+          possible_moves = possible_queen_moves(start, player)
+        when 'king'
+          start = return_coords([i, ind])
+          possible_moves = possible_king_moves(start, player)
+        when 'knight'
+          start = return_coords([i, ind])
+          possible_moves = possible_knight_moves(start, player)
         end
       end
     end
