@@ -9,13 +9,14 @@ class Game
 
   attr_accessor :board, :player1, :player2,
                 :check, :check_mate, :check_moves,
-                :last_move
+                :last_move, :last_piece_taken
 
   def initialize
     @board = Board.new
     @player1 = nil
     @player2 = nil
     @last_move = nil
+    @last_piece_taken = nil
     # @check = nil
     # @checkmate = nil
     # @check_moves = []
@@ -131,7 +132,7 @@ class Game
         end
       end
     end
-    nil
+    puts "Is checkmate."
   end
 
   def player_move(start, finish, player)
@@ -196,31 +197,39 @@ class Game
         redo
       elsif check?(player)
         puts "Can't move there. You're in check."
-        reverse_move(start, finish)
+        reverse_move(last_move)
         redo
       else
         break
       end
     end
   end
-
-  def reverse_move(start, finish)
-    start, finish = last_move
-    move_piece(finish, start)
+  
+  def reverse_move(move)
+    finish, start = move
+    start_piece = return_piece(start)
+    finish_piece = return_piece(finish)
+    set_piece(finish, start_piece)
+    set_piece(start, last_piece_taken)
   end
 
   def return_piece(coordinates)
     let, num = coordinates.scan(/[a-z]|\d+/)
-    return 'error' unless ('a'..'h') === let && ('1'..'8') === num
-
+    # return 'error' unless ('a'..'h') === let && ('1'..'8') === num
     board.return_board[num.to_i - 1][let.ord - 97]
   end
 
   def move_piece(start, finish)
-    start_let, start_num = start.scan(/[a-z]|\d+/)
-    finish_let, finish_num = finish.scan(/[a-z]|\d+/)
-    board.return_board[finish_num.to_i - 1][finish_let.ord - 97] = return_piece(start)
-    board.return_board[start_num.to_i - 1][start_let.ord - 97] = '-'
+    start_piece = return_piece(start)
+    finish_piece = return_piece(finish)
+    self.last_piece_taken = finish_piece
+    set_piece(finish, start_piece)
+    set_piece(start, '-') 
+  end
+
+  def set_piece(coordinates, piece)
+    let, num = coordinates.scan(/[a-z]|\d+/)
+    board.return_board[num.to_i - 1][let.ord - 97] = piece
   end
 
   def move_validated_piece(start, finish, possible_moves)
