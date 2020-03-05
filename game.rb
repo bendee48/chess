@@ -42,56 +42,52 @@ class Game
   end
 
   def check?(player)
-    #refactor with blocks
     king_coords = return_coords(find_king(player))
-    # diagonal check
+    checks = check_directions(player)
+    checks.each do |key, check|
+      check.each do |_, move|
+        create_moves(king_coords, *move) do |next_move|
+          piece = return_piece(next_move)
+          if [:knight, :pawn_attack].include?(key)
+            break if piece == '-'
+          else
+            next if piece == '-'
+          end
+          break if piece.is_a?(ChessPiece) && piece.color == player.color
+          return true if check_booleans(piece, key, player)
+        end
+      end
+    end
+    return false
+  end
+
+  def check_booleans(piece, key, player)
+    (%w(bishop queen).include?(piece.name) && 
+      piece.color != player.color && key == :diagonal) ||
+      (%w(rook queen).include?(piece.name) && 
+      piece.color != player.color && key == :horiz_vert) ||
+      (%w(knight).include?(piece.name) && 
+      piece.color != player.color && key == :knight) ||
+      (%w(pawn).include?(piece.name) && 
+      piece.color != player.color && key == :pawn_attack)
+  end
+
+  def check_directions(player)
     diagonal_check = { up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1] }
-    diagonal_check.each do |__, move|
-      create_moves(king_coords, *move) do |next_move|
-        piece = return_piece(next_move)
-        next if piece == '-'
-        break if piece.is_a?(ChessPiece) && piece.color == player.color
-        return true if %w(bishop queen).include?(piece.name) && piece.color != player.color
-      end
-    end
-    # horizontal and vertical check
     horiz_vert_check = { up: [0, 1], down: [0, -1], left: [-1, 0], right: [1, 0] }
-    horiz_vert_check.each do |__, move|
-      create_moves(king_coords, *move) do |next_move|
-        piece = return_piece(next_move)
-        next if piece == '-'
-        break if piece.is_a?(ChessPiece) && piece.color == player.color
-        return true if %w(rook queen).include?(piece.name) && piece.color != player.color
-      end
-    end
-    # knight check
     knight_check = {
       up_right1: [2, 1], up_right2: [1, 2], down_right1: [-1, 2], down_right2: [-2, 1],
       left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
     }
-    knight_check.each do |_, move|
-      create_moves(king_coords, *move) do |next_move|
-        piece = return_piece(next_move)
-        break if piece == '-'
-        break if piece.is_a?(ChessPiece) && piece.color == player.color
-        return true if %w(knight).include?(piece.name) && piece.color != player.color
-      end
-    end
-    # pawn attack check
     if player.color == 'black'
       pawn_check = { right: [1, 1], left: [-1, 1] }
     else
       pawn_check = { right: [-1, -1], left: [1, -1] }
     end
-    pawn_check.each do |_, move|
-      create_moves(king_coords, *move) do |next_move|
-        piece = return_piece(next_move)
-        break if piece == '-'
-        break if piece.is_a?(ChessPiece) && piece.color == player.color
-        return true if %w(pawn).include?(piece.name) && piece.color != player.color
-      end
-    end
-    return false
+    { 
+      diagonal: diagonal_check, horiz_vert: horiz_vert_check, 
+      knight: knight_check, pawn_attack: pawn_check               
+    }
   end
 
   def find_king(player)
@@ -216,13 +212,14 @@ class Game
 
   private
 
-  #yields next possble move to block
+  #yields next possble move to block.
+  # use block to set break conditions
   def create_moves(start, add_to_let, add_to_num)
     letter, number = start.scan(/[a-z]|\d+/)
     loop do
       letter = (letter.ord + add_to_let).chr
       number = number.to_i + add_to_num
-      break if !('a'..'h').include?(letter) || !(1..8).include?(number)
+      break unless ('a'..'h').include?(letter) && (1..8).include?(number)
       yield("#{letter}#{number}")   
     end
   end
