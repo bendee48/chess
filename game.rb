@@ -8,7 +8,7 @@ class Game
   include Validation
 
   attr_accessor :board, :player1, :player2,
-                :check, :check_mate, :check_moves,
+                :check, :checkmate, :check_moves,
                 :last_move, :last_piece_taken
 
   def initialize
@@ -18,7 +18,7 @@ class Game
     @last_move = nil
     @last_piece_taken = nil
     # @check = nil
-    # @checkmate = nil
+    @checkmate = nil
     # @check_moves = []
   end
 
@@ -29,10 +29,16 @@ class Game
     loop do
       player = players.next
       board.display_board
-      puts "Game Over" if check_mate?(player)
+      game_over if check_mate?(player)
       puts "You're in check" if check?(player)
       make_move(player)
+      game_over if check_mate?(player)
     end
+  end
+
+  def game_over
+    puts "Game Over"
+    "game over"
   end
 
   def check?(player)
@@ -114,25 +120,73 @@ class Game
         when 'pawn'
           start = return_coords([i, ind])
           possible_moves = possible_pawn_moves(start, player)
+          possible_moves.each do |finish|
+            move_piece(start, finish)
+            if !check?(player)
+              reverse_move([start, finish])
+              return false
+            end
+            reverse_move([start, finish])
+          end
         when 'rook'
           start = return_coords([i, ind])
           possible_moves = possible_rook_moves(start, player) 
+          possible_moves.each do |finish|
+            move_piece(start, finish)
+            if !check?(player)
+              reverse_move([start, finish])
+              return false
+            end
+            reverse_move([start, finish])
+          end
         when 'bishop'
           start = return_coords([i, ind])
           possible_moves = possible_bishop_moves(start, player)
+          possible_moves.each do |finish|
+            move_piece(start, finish)
+            if !check?(player)
+              reverse_move([start, finish])
+              return false
+            end
+            reverse_move([start, finish])
+          end
         when 'queen'
           start = return_coords([i, ind])
           possible_moves = possible_queen_moves(start, player)
+          possible_moves.each do |finish|
+            move_piece(start, finish)
+            if !check?(player)
+              reverse_move([start, finish])
+              return false
+            end
+            reverse_move([start, finish])
+          end
         when 'king'
           start = return_coords([i, ind])
           possible_moves = possible_king_moves(start, player)
+          possible_moves.each do |finish|
+            move_piece(start, finish)
+            if !check?(player)
+              reverse_move([start, finish])
+              return false
+            end
+            reverse_move([start, finish])
+          end
         when 'knight'
           start = return_coords([i, ind])
           possible_moves = possible_knight_moves(start, player)
+          possible_moves.each do |finish|
+            move_piece(start, finish)
+            if !check?(player)
+              reverse_move([start, finish])
+              return false
+            end
+            reverse_move([start, finish])
+          end
         end
       end
     end
-    puts "Is checkmate."
+    return true
   end
 
   def player_move(start, finish, player)

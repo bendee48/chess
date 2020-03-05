@@ -484,7 +484,6 @@ describe 'Game' do
 
     it "returns true for a knight checking a king" do
       game.board.row_3[5] = Knight.new('white')
-      game.board.display_board
       expect(game.check?(player)).to eql true
     end
 
@@ -493,9 +492,19 @@ describe 'Game' do
       game.board.row_8[4] = '-'
       game.board.row_3[3] = King.new('white')
       game.board.row_6[3] = King.new('black')
-      game.board.display_board
       expect(game.check?(player)).to eql true
       expect(game.check?(player2)).to eql true
+    end
+  end
+
+  describe "#check_mate?" do
+    it "should return true if checkmate" do
+      king = King.new('black')
+      queen = Queen.new('white')
+      game.send(:set_piece, 'e1', '-')
+      game.send(:set_piece, 'a3', king)
+      game.send(:set_piece, 'b5', queen)
+      expect(game.check_mate?(player)).to eql true
     end
   end
 end
