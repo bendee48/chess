@@ -227,7 +227,6 @@ class Game
 
   def return_piece(coordinates)
     let, num = coordinates.scan(/[a-z]|\d+/)
-    # return 'error' unless ('a'..'h') === let && ('1'..'8') === num
     board.return_board[num.to_i - 1][let.ord - 97]
   end
 
@@ -264,11 +263,12 @@ class Game
 
   def possible_pawn_moves(start, player)
     valid_moves = []
-    if player.color == 'black'
-      moves = { up: [0, 1] }
-    else
-      moves = { down: [0, -1] }
-    end
+    moves =
+      if player.color == 'black'
+        { up: [0, 1] }
+      else
+        { down: [0, -1] }
+      end
 
     moves.each do |__, move|
       add_to_let, add_to_num = move
@@ -292,11 +292,12 @@ class Game
 
   def pawn_attack_moves(start, player)
     valid_moves = []
-    if player.color == 'black'
-      moves = { right: [1, 1], left: [-1, 1] }
-    else
-      moves = { right: [-1, -1], left: [1, -1] }
-    end
+    moves = 
+      if player.color == 'black'
+        { right: [1, 1], left: [-1, 1] }
+      else
+        { right: [-1, -1], left: [1, -1] }
+      end
 
     moves.each do |__, move|
       add_to_let, add_to_num = move
