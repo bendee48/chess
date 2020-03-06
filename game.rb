@@ -8,8 +8,8 @@ class Game
   include Validation
 
   attr_accessor :board, :player1, :player2,
-                :check, :checkmate, :check_moves,
-                :last_move, :last_piece_taken
+                :checkmate, :last_move,
+                :last_piece_taken
 
   def initialize
     @board = Board.new
@@ -17,9 +17,7 @@ class Game
     @player2 = nil
     @last_move = nil
     @last_piece_taken = nil
-    # @check = nil
     @checkmate = nil
-    # @check_moves = []
   end
 
   def play
@@ -37,7 +35,7 @@ class Game
   end
 
   def game_over
-    puts "Game Over"
+    puts "That's checkmate. Game Over"
     "game over"
   end
 
@@ -79,11 +77,12 @@ class Game
       up_right1: [2, 1], up_right2: [1, 2], down_right1: [-1, 2], down_right2: [-2, 1],
       left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
     }
-    if player.color == 'black'
-      pawn_check = { right: [1, 1], left: [-1, 1] }
-    else
-      pawn_check = { right: [-1, -1], left: [1, -1] }
-    end
+    pawn_check = 
+      if player.color == 'black'
+        { right: [1, 1], left: [-1, 1] }
+      else
+        { right: [-1, -1], left: [1, -1] }
+      end
     { 
       diagonal: diagonal_check, horiz_vert: horiz_vert_check, 
       knight: knight_check, pawn_attack: pawn_check               
@@ -110,79 +109,41 @@ class Game
   def check_mate?(player)
     board.return_board.each_with_index do |row, ind|
       row.each_with_index do |sq, i|
-        next if !sq.is_a?(ChessPiece)
-        next if sq.color != player.color
-        case sq.name
+        next unless sq.is_a?(ChessPiece)
+        next unless sq.color == player.color
+        piece = sq.name
+
+        case piece
         when 'pawn'
-          start = return_coords([i, ind])
-          possible_moves = possible_pawn_moves(start, player)
-          possible_moves.each do |finish|
-            move_piece(start, finish)
-            if !check?(player)
-              reverse_move([start, finish])
-              return false
-            end
-            reverse_move([start, finish])
-          end
+          return false if move_stops_check?([i, ind], piece, player)
         when 'rook'
-          start = return_coords([i, ind])
-          possible_moves = possible_rook_moves(start, player) 
-          possible_moves.each do |finish|
-            move_piece(start, finish)
-            if !check?(player)
-              reverse_move([start, finish])
-              return false
-            end
-            reverse_move([start, finish])
-          end
+          return false if move_stops_check?([i, ind], piece, player)
         when 'bishop'
-          start = return_coords([i, ind])
-          possible_moves = possible_bishop_moves(start, player)
-          possible_moves.each do |finish|
-            move_piece(start, finish)
-            if !check?(player)
-              reverse_move([start, finish])
-              return false
-            end
-            reverse_move([start, finish])
-          end
+          return false if move_stops_check?([i, ind], piece, player)
         when 'queen'
-          start = return_coords([i, ind])
-          possible_moves = possible_queen_moves(start, player)
-          possible_moves.each do |finish|
-            move_piece(start, finish)
-            if !check?(player)
-              reverse_move([start, finish])
-              return false
-            end
-            reverse_move([start, finish])
-          end
+          return false if move_stops_check?([i, ind], piece, player)
         when 'king'
-          start = return_coords([i, ind])
-          possible_moves = possible_king_moves(start, player)
-          possible_moves.each do |finish|
-            move_piece(start, finish)
-            if !check?(player)
-              reverse_move([start, finish])
-              return false
-            end
-            reverse_move([start, finish])
-          end
+          return false if move_stops_check?([i, ind], piece, player)
         when 'knight'
-          start = return_coords([i, ind])
-          possible_moves = possible_knight_moves(start, player)
-          possible_moves.each do |finish|
-            move_piece(start, finish)
-            if !check?(player)
-              reverse_move([start, finish])
-              return false
-            end
-            reverse_move([start, finish])
-          end
+          return false if move_stops_check?([i, ind], piece, player)
         end
       end
     end
-    return true
+    true
+  end
+
+  def move_stops_check?(indices, piece, player)
+    start = return_coords(indices)
+    possible_moves = send("possible_#{piece}_moves", start, player)
+    possible_moves.each do |finish|
+      move_piece(start, finish)
+      unless check?(player)
+        reverse_move([start, finish])
+        return true
+      end
+      reverse_move([start, finish])
+    end
+    false
   end
 
   def player_move(start, finish, player)
