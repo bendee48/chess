@@ -21,7 +21,7 @@ class Board
     puts
     return_board.reverse_each do |row|
       row = row.map { |piece| piece.is_a?(ChessPiece) ? piece.unicode : piece }
-      puts " #{num}  %s %s %s %s %s %s %s %s  #{num}" % row
+      puts sprintf(" #{num}  %s %s %s %s %s %s %s %s  #{num}", *row)
       num -= 1
     end
     puts

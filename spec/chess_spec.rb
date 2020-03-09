@@ -4,8 +4,6 @@ require './pieces'
 require './game'
 require './player'
 
-#add more doubls and stubs
-
 describe 'ChessPiece' do
   describe 'initialize sets up Pawn object correctly' do
     let(:pawn) { Pawn.new('black') }

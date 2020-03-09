@@ -3,13 +3,15 @@
 require './board'
 require './player'
 require './validation'
+require './moves'
 
 class Game
   include Validation
 
-  attr_accessor :board, :player1, :player2,
+  attr_accessor :player1, :player2,
                 :checkmate, :last_move,
                 :last_piece_taken
+  attr_reader   :board, :moves
 
   def initialize
     @board = Board.new
@@ -18,6 +20,7 @@ class Game
     @last_move = nil
     @last_piece_taken = nil
     @checkmate = nil
+    @moves = Moves.new
   end
 
   def play
@@ -71,19 +74,11 @@ class Game
   end
 
   def check_directions(player)
-    diagonal_check = { up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1] }
-    horiz_vert_check = { up: [0, 1], down: [0, -1], left: [-1, 0], right: [1, 0] }
-    knight_check = {
-      up_right1: [2, 1], up_right2: [1, 2], down_right1: [-1, 2], down_right2: [-2, 1],
-      left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
-    }
-    pawn_check = 
-      if player.color == 'black'
-        { right: [1, 1], left: [-1, 1] }
-      else
-        { right: [-1, -1], left: [1, -1] }
-      end
-    { 
+    diagonal_check = moves.diagonal_moves
+    horiz_vert_check = moves.horizontal_vertical_moves
+    knight_check = moves.knight_moves
+    pawn_check = moves.pawn_attack_moves(player)
+    {
       diagonal: diagonal_check, horiz_vert: horiz_vert_check, 
       knight: knight_check, pawn_attack: pawn_check               
     }
@@ -201,9 +196,9 @@ class Game
   def make_move(player)
     loop do
       puts "Make your move #{player.name}."
-      ans = gets.chomp
-      ans = ans.split
-      start, finish = ans
+      answer = gets.chomp
+      answer = answer.split
+      start, finish = answer
       result = player_move(start, finish, player)
       if result.nil?
         redo
@@ -263,14 +258,9 @@ class Game
 
   def possible_pawn_moves(start, player)
     valid_moves = []
-    moves =
-      if player.color == 'black'
-        { up: [0, 1] }
-      else
-        { down: [0, -1] }
-      end
+    movements = moves.pawn_moves(player)
 
-    moves.each do |__, move|
+    movements.each do |__, move|
       add_to_let, add_to_num = move
       current_num = start[1].to_i
       create_moves(start, add_to_let, add_to_num ) do |next_move|
@@ -292,14 +282,9 @@ class Game
 
   def pawn_attack_moves(start, player)
     valid_moves = []
-    moves = 
-      if player.color == 'black'
-        { right: [1, 1], left: [-1, 1] }
-      else
-        { right: [-1, -1], left: [1, -1] }
-      end
+    movements = moves.pawn_attack_moves(player)
 
-    moves.each do |__, move|
+    movements.each do |__, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = return_piece(next_move)
@@ -317,9 +302,9 @@ class Game
 
   def possible_rook_moves(start, player)
     valid_moves = []
-    moves = { up: [0, 1], down: [0, -1], left: [-1, 0], right: [1, 0] }
+    movements = moves.horizontal_vertical_moves
 
-    moves.each do |__, move|
+    movements.each do |__, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = return_piece(next_move)
@@ -337,9 +322,9 @@ class Game
 
   def possible_bishop_moves(start, player)
     valid_moves = []
-    moves = { up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1] }
+    movements = moves.diagonal_moves
 
-    moves.each do |__, move|
+    movements.each do |__, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = return_piece(next_move)
@@ -361,12 +346,9 @@ class Game
 
   def possible_king_moves(start, player)
     valid_moves = []
-    moves = {
-      up: [0, 1], up_right: [1, 1], right: [1, 0], down_right: [1, -1],
-      down: [0, -1], down_left: [-1, -1], left: [-1, 0], up_left: [-1, 1]
-    }
+    movements = moves.diagonal_moves.merge(moves.horizontal_vertical_moves)
 
-    moves.each do |__, move|
+    movements.each do |__, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = return_piece(next_move)
@@ -385,12 +367,9 @@ class Game
 
   def possible_knight_moves(start, player)
     valid_moves = []
-    moves = {
-      up_right1: [2, 1], up_right2: [1, 2], down_right1: [-1, 2], down_right2: [-2, 1],
-      left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
-    }
+    movements = moves.knight_moves
 
-    moves.each do |__, move|
+    movements.each do |__, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = return_piece(next_move)
