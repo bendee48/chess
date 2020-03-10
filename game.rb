@@ -11,7 +11,7 @@ class Game
   attr_accessor :player1, :player2,
                 :checkmate, :last_move,
                 :last_piece_taken
-  attr_reader   :board, :moves
+  attr_reader   :board
 
   def initialize
     @board = Board.new
@@ -20,7 +20,6 @@ class Game
     @last_move = nil
     @last_piece_taken = nil
     @checkmate = nil
-    @moves = Moves.new
   end
 
   def play
@@ -74,13 +73,9 @@ class Game
   end
 
   def check_directions(player)
-    diagonal_check = moves.diagonal_moves
-    horiz_vert_check = moves.horizontal_vertical_moves
-    knight_check = moves.knight_moves
-    pawn_check = moves.pawn_attack_moves(player)
     {
-      diagonal: diagonal_check, horiz_vert: horiz_vert_check, 
-      knight: knight_check, pawn_attack: pawn_check               
+      diagonal: Moves.diagonal, horiz_vert: Moves.horizontal_vertical, 
+      knight: Moves.knight, pawn_attack: Moves.pawn_attack(player)              
     }
   end
 
@@ -258,7 +253,7 @@ class Game
 
   def possible_pawn_moves(start, player)
     valid_moves = []
-    movements = moves.pawn_moves(player)
+    movements = Moves.pawn(player)
 
     movements.each do |__, move|
       add_to_let, add_to_num = move
@@ -282,7 +277,7 @@ class Game
 
   def pawn_attack_moves(start, player)
     valid_moves = []
-    movements = moves.pawn_attack_moves(player)
+    movements = Moves.pawn_attack(player)
 
     movements.each do |__, move|
       add_to_let, add_to_num = move
@@ -302,7 +297,7 @@ class Game
 
   def possible_rook_moves(start, player)
     valid_moves = []
-    movements = moves.horizontal_vertical_moves
+    movements = Moves.horizontal_vertical
 
     movements.each do |__, move|
       add_to_let, add_to_num = move
@@ -322,7 +317,7 @@ class Game
 
   def possible_bishop_moves(start, player)
     valid_moves = []
-    movements = moves.diagonal_moves
+    movements = Moves.diagonal
 
     movements.each do |__, move|
       add_to_let, add_to_num = move
@@ -346,7 +341,7 @@ class Game
 
   def possible_king_moves(start, player)
     valid_moves = []
-    movements = moves.diagonal_moves.merge(moves.horizontal_vertical_moves)
+    movements = Moves.diagonal.merge(Moves.horizontal_vertical)
 
     movements.each do |__, move|
       add_to_let, add_to_num = move
@@ -367,7 +362,7 @@ class Game
 
   def possible_knight_moves(start, player)
     valid_moves = []
-    movements = moves.knight_moves
+    movements = Moves.knight
 
     movements.each do |__, move|
       add_to_let, add_to_num = move
