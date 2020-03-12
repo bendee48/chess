@@ -38,7 +38,7 @@ class Game
 
   def game_over
     puts "That's checkmate. Game Over"
-    "game over"
+    exit
   end
 
   def check?(player)
@@ -163,7 +163,7 @@ class Game
 
   private
 
-  #yields next possble move to block.
+  # yields next possble move to block.
   # use block to set break conditions
   def create_moves(start, add_to_let, add_to_num)
     letter, number = start.scan(/[a-z]|\d+/)
@@ -192,6 +192,10 @@ class Game
     loop do
       puts "Make your move #{player.name}."
       answer = gets.chomp
+      unless valid_format?(answer)
+        puts "Invalid format."
+        redo
+      end
       answer = answer.split
       start, finish = answer
       result = player_move(start, finish, player)

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# maybe change how validation works?
 module Validation
   def validate_name(num)
     loop do
@@ -21,7 +22,7 @@ module Validation
     loop do
       color = gets.chomp.strip.downcase
       if color != 'black' && color != 'white'
-        puts "Sorry, I didn't recognise that colour. PLease try again."
+        puts "Sorry, I didn't recognise that colour. Please try again."
       else
         send("player#{num}").color = color
         puts "Thanks #{player1.name}, you're #{color}."
@@ -40,5 +41,10 @@ module Validation
       start_piece = start_piece.name
     end
     start_piece
+  end
+
+  def valid_format?(move)
+    move = move.downcase
+    move =~ /[a-h][1-8]\s[a-h][1-8]/
   end
 end
