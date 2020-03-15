@@ -1,3 +1,4 @@
+require './game'
 require 'yaml'
 
 module SaveGame
@@ -8,8 +9,14 @@ module SaveGame
   end
 
   def self.load
-    file = Dir.glob("./save_files/*.yml").first
-    read_file = File.read(file)
-    YAML.load(read_file)
+    file = Dir.glob("./save_files/*.yml")
+    unless file.empty? 
+      read_file = File.read(file.first)
+      YAML.load(read_file)
+    else
+      puts "No save file found."
+      puts "Starting new game instead."; sleep 2
+      Game.new.new_game
+    end
   end
 end

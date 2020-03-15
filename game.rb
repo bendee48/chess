@@ -4,6 +4,7 @@ require './board'
 require './player'
 require './validation'
 require './moves'
+require './save'
 
 class Game
   include Validation
@@ -22,9 +23,29 @@ class Game
     @checkmate = nil
   end
 
-  def play
-    puts 'Chess.'
+  def introduction
+    #blurb and instructions
+    puts "Would you like to load a previously saved game?"
+    puts "Enter 'load' for saved game or 'new' to start new game:"
+    answer = gets.chomp.strip
+    if answer == 'load'
+      load_game
+    else
+      new_game
+    end
+  end
+
+  def load_game
+    game = SaveGame::load
+    game.play
+  end
+
+  def new_game
     player_setup
+    play
+  end
+
+  def play    
     players = [player1, player2].cycle
     loop do
       player = players.next
@@ -192,6 +213,7 @@ class Game
     loop do
       puts "Make your move #{player.name}."
       answer = gets.chomp
+      (save_game; break) if answer == 'save'
       unless valid_format?(answer)
         puts "Invalid format."
         redo
@@ -209,6 +231,12 @@ class Game
         break
       end
     end
+  end
+
+  def save_game
+    SaveGame::save(self)
+    puts "Game saved successfully."
+    exit
   end
   
   def reverse_move(move)

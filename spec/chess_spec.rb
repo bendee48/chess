@@ -86,6 +86,7 @@ describe 'Game' do
     end
 
     it "doesn't allow a pawn to move up if the square is occupied" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move('b2', 'b4', player)
       game.player_move('b4', 'b5', player)
       game.player_move('b5', 'b6', player)
@@ -94,6 +95,7 @@ describe 'Game' do
     end
 
     it "isn't allowed to move sideways" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move('f2', 'f3', player)
       game.player_move('f3', 'g3', player)
       expect(game.board.row_3[6]).to eql '-'
@@ -129,6 +131,7 @@ describe 'Game' do
     end
 
     it "doesn't allow pawn to move down if square is taken" do
+      allow(game).to receive(:puts).and_return(nil)
       game.board.row_3[3] = pawn
       game.player_move('d3', 'd2', player_white)
       expect(game.board.row_3[3]).to eql pawn
@@ -166,6 +169,7 @@ describe 'Game' do
     end
 
     it "isn't allowed to move past it's own pieces" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move('d4', 'd2', player)
       expect(game.board.row_4[3]).to eql rook
       expect(game.board.row_2[3]).to be_a Pawn
@@ -178,6 +182,7 @@ describe 'Game' do
     end
 
     it "doesn't take the opponents king" do
+      allow(game).to receive(:puts).and_return(nil)
       king = King.new('white')
       game.board.row_4[4] = king
       game.player_move('d4', 'e4', player)
@@ -217,6 +222,7 @@ describe 'Game' do
     end
 
     it "isn't allowed to move past it's own pieces" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move('d3', 'f1', player)
       expect(game.board.row_3[3]).to eql bishop
     end
@@ -228,6 +234,7 @@ describe 'Game' do
     end
 
     it "doesn't take the opponents king" do
+      allow(game).to receive(:puts).and_return(nil)
       king = King.new('white')
       game.board.row_4[4] = king
       game.player_move('d3', 'e4', player)
@@ -292,6 +299,7 @@ describe 'Game' do
     end
 
     it "isn't allowed to move past it's own pieces" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move('d4', 'b2', player)
       expect(game.board.row_4[3]).to eql queen
     end
@@ -303,6 +311,7 @@ describe 'Game' do
     end
 
     it "doesn't take the opponents king" do
+      allow(game).to receive(:puts).and_return(nil)
       king = King.new('white')
       game.board.row_5[4] = king
       game.player_move('d4', 'e5', player)
@@ -364,6 +373,7 @@ describe 'Game' do
     end
 
     it "isn't allowed to move past it's own pieces" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move('d4', 'd3', player)
       game.player_move('d3', 'd2', player)
       expect(game.board.row_3[3]).to eql king
@@ -378,6 +388,7 @@ describe 'Game' do
     end
 
     it "doesn't take the opponents king" do
+      allow(game).to receive(:puts).and_return(nil)
       white_king = King.new('white')
       game.board.row_4[4] = white_king
       game.player_move('d4', 'e4', player)
@@ -386,6 +397,7 @@ describe 'Game' do
     end
 
     it "can't move more than 1 square" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move("d4", "d6", player)
       expect(game.board.row_6[3]).to eql '-'
     end
@@ -461,6 +473,7 @@ describe 'Game' do
     end
 
     it "doesn't take the opponents king" do
+      allow(game).to receive(:puts).and_return(nil)
       game.player_move('d4', 'b5', player)
       game.player_move('b5', 'd6', player)
       game.player_move('d6', 'e8', player)
