@@ -10,17 +10,18 @@ class Game
   include Validation
 
   attr_accessor :player1, :player2,
-                :checkmate, :last_move,
-                :last_piece_taken
+                :last_move, :last_piece_taken,
+                :current_player, :loaded_game
   attr_reader   :board
 
   def initialize
     @board = Board.new
     @player1 = nil
     @player2 = nil
+    @current_player = nil
     @last_move = nil
     @last_piece_taken = nil
-    @checkmate = nil
+    @loaded_game = nil
   end
 
   def introduction
@@ -37,6 +38,7 @@ class Game
 
   def load_game
     game = SaveGame::load
+    game.loaded_game = true
     game.play
   end
 
@@ -46,14 +48,23 @@ class Game
   end
 
   def play    
-    players = [player1, player2].cycle
+    players = load_saved_player
     loop do
       player = players.next
+      self.current_player = player
       board.display_board
       game_over if check_mate?(player)
       puts "You're in check" if check?(player)
       make_move(player)
       game_over if check_mate?(player)
+    end
+  end
+
+  def load_saved_player
+    if loaded_game && current_player.number == 2
+      [player2, player1].cycle
+    else
+      [player1, player2].cycle
     end
   end
 

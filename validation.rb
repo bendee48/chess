@@ -11,7 +11,7 @@ module Validation
       elsif name.size > 12
         puts 'Name must be less than 12 characters.'
       else
-        send("player#{num}=", Player.new(name))
+        send("player#{num}=", Player.new(name, nil, num))
         break
       end
     end
