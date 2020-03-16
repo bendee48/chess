@@ -5,6 +5,7 @@ require './player'
 require './validation'
 require './moves'
 require './save'
+require './textable'
 
 class Game
   include Validation
@@ -24,11 +25,12 @@ class Game
     @loaded_game = nil
   end
 
-  def introduction
-    #blurb and instructions
-    puts "Would you like to load a previously saved game?"
-    puts "Enter 'load' for saved game or 'new' to start new game:"
-    answer = gets.chomp.strip
+  def start
+    Textable::introduction
+    answer = gets.chomp.strip.downcase
+    Textable::instructions if answer == 'i'
+    Textable::load
+    answer = gets.chomp.strip.downcase
     if answer == 'load'
       load_game
     else
