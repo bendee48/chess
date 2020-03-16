@@ -6,6 +6,7 @@ require './validation'
 require './moves'
 require './save'
 require './textable'
+require './check'
 
 class Game
   include Validation
@@ -55,10 +56,11 @@ class Game
       player = players.next
       self.current_player = player
       board.display_board
-      game_over if check_mate?(player)
-      puts "You're in check" if check?(player)
+      @check_if = Check.new(self)
+      game_over if @check_if.check_mate?(player)
+      puts "You're in check" if @check.check?(player)
       make_move(player)
-      game_over if check_mate?(player)
+      game_over if @check_if.check_mate?(player)
     end
   end
 
@@ -72,102 +74,7 @@ class Game
 
   def game_over
     puts "That's checkmate. Game Over"
-    exit
-  end
-
-  def check?(player)
-    king_coords = return_coords(find_king(player))
-    checks = check_directions(player)
-    checks.each do |key, check|
-      check.each do |_, move|
-        create_moves(king_coords, *move) do |next_move|
-          piece = return_piece(next_move)
-          if [:knight, :pawn_attack].include?(key)
-            break if piece == '-'
-          else
-            next if piece == '-'
-          end
-          break if piece.is_a?(ChessPiece) && piece.color == player.color
-          return true if check_booleans(piece, key, player)
-        end
-      end
-    end
-    return false
-  end
-
-  def check_booleans(piece, key, player)
-    (%w(bishop queen).include?(piece.name) && 
-      piece.color != player.color && key == :diagonal) ||
-      (%w(rook queen).include?(piece.name) && 
-      piece.color != player.color && key == :horiz_vert) ||
-      (%w(knight).include?(piece.name) && 
-      piece.color != player.color && key == :knight) ||
-      (%w(pawn).include?(piece.name) && 
-      piece.color != player.color && key == :pawn_attack)
-  end
-
-  def check_directions(player)
-    {
-      diagonal: Moves.diagonal, horiz_vert: Moves.horizontal_vertical, 
-      knight: Moves.knight, pawn_attack: Moves.pawn_attack(player)              
-    }
-  end
-
-  def find_king(player)
-    board.return_board.each_with_index do |row, ind|
-      let = row.find_index do |piece| 
-              next unless piece.is_a?(ChessPiece)
-              piece.is_a?(King) && piece.color == player.color
-            end
-      return [let, ind] if let
-    end
-  end
-
-  def return_coords(indices)
-    let, num = indices
-    let = (let + 97).chr
-    num = num + 1
-    "#{let}#{num}"
-  end
-
-  def check_mate?(player)
-    board.return_board.each_with_index do |row, ind|
-      row.each_with_index do |sq, i|
-        next unless sq.is_a?(ChessPiece)
-        next unless sq.color == player.color
-        piece = sq.name
-
-        case piece
-        when 'pawn'
-          return false if move_stops_check?([i, ind], piece, player)
-        when 'rook'
-          return false if move_stops_check?([i, ind], piece, player)
-        when 'bishop'
-          return false if move_stops_check?([i, ind], piece, player)
-        when 'queen'
-          return false if move_stops_check?([i, ind], piece, player)
-        when 'king'
-          return false if move_stops_check?([i, ind], piece, player)
-        when 'knight'
-          return false if move_stops_check?([i, ind], piece, player)
-        end
-      end
-    end
-    true
-  end
-
-  def move_stops_check?(indices, piece, player)
-    start = return_coords(indices)
-    possible_moves = send("possible_#{piece}_moves", start, player)
-    possible_moves.each do |finish|
-      move_piece(start, finish)
-      unless check?(player)
-        reverse_move([start, finish])
-        return true
-      end
-      reverse_move([start, finish])
-    end
-    false
+    exit(0)
   end
 
   def player_move(start, finish, player)
@@ -195,8 +102,6 @@ class Game
     end
   end
 
-  private
-
   # yields next possble move to block.
   # use block to set break conditions
   def create_moves(start, add_to_let, add_to_num)
@@ -208,6 +113,34 @@ class Game
       yield("#{letter}#{number}")   
     end
   end
+
+  def move_piece(start, finish)
+    start_piece = return_piece(start)
+    finish_piece = return_piece(finish)
+    self.last_piece_taken = finish_piece
+    set_piece(finish, start_piece)
+    set_piece(start, '-') 
+  end
+
+  def reverse_move(move)
+    finish, start = move
+    start_piece = return_piece(start)
+    finish_piece = return_piece(finish)
+    set_piece(finish, start_piece)
+    set_piece(start, last_piece_taken)
+  end
+
+  def return_piece(coordinates)
+    let, num = coordinates.scan(/[a-z]|\d+/)
+    board.return_board[num.to_i - 1][let.ord - 97]
+  end
+
+  def set_piece(coordinates, piece)
+    let, num = coordinates.scan(/[a-z]|\d+/)
+    board.return_board[num.to_i - 1][let.ord - 97] = piece
+  end
+
+  private  
 
   def player_setup
     [1, 2].each do |num|
@@ -236,7 +169,7 @@ class Game
       result = player_move(start, finish, player)
       if result.nil?
         redo
-      elsif check?(player)
+      elsif @check_if.check?(player)
         puts "Can't move there. You're in check."
         reverse_move(last_move)
         redo
@@ -250,32 +183,6 @@ class Game
     SaveGame::save(self)
     puts "Game saved successfully."
     exit
-  end
-  
-  def reverse_move(move)
-    finish, start = move
-    start_piece = return_piece(start)
-    finish_piece = return_piece(finish)
-    set_piece(finish, start_piece)
-    set_piece(start, last_piece_taken)
-  end
-
-  def return_piece(coordinates)
-    let, num = coordinates.scan(/[a-z]|\d+/)
-    board.return_board[num.to_i - 1][let.ord - 97]
-  end
-
-  def move_piece(start, finish)
-    start_piece = return_piece(start)
-    finish_piece = return_piece(finish)
-    self.last_piece_taken = finish_piece
-    set_piece(finish, start_piece)
-    set_piece(start, '-') 
-  end
-
-  def set_piece(coordinates, piece)
-    let, num = coordinates.scan(/[a-z]|\d+/)
-    board.return_board[num.to_i - 1][let.ord - 97] = piece
   end
 
   def move_validated_piece(start, finish, possible_moves)

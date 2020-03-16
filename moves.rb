@@ -1,3 +1,4 @@
+# Class that models piece movement
 class Moves
   def self.pawn(player)
     if player.color == 'black'
