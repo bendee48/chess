@@ -11,6 +11,9 @@ class ChessPiece
     @default_symbol = default_symbol
   end
   # default_symbol inplace of unicode
+  def unicode
+    color == 'black' ? @unicode_black : @unicode_white
+  end  
 end
 
 class Pawn < ChessPiece
@@ -18,16 +21,8 @@ class Pawn < ChessPiece
     @name = 'pawn'
     @default_symbol = 'P'
     @color = color
-    set_unicode(color)
-  end
-
-  def set_unicode(color)
-    case color
-    when 'black'
-      self.unicode = "\u2659"
-    when 'white'
-      self.unicode = "\u265F"
-    end
+    @unicode_black = "\u2659"
+    @unicode_white = "\u265F"
   end
 end
 
@@ -36,16 +31,8 @@ class Rook < ChessPiece
     @name = 'rook'
     @default_symbol = 'R'
     @color = color
-    set_unicode(color)
-  end
-
-  def set_unicode(color)
-    case color
-    when 'black'
-      self.unicode = "\u2656"
-    when 'white'
-      self.unicode = "\u265C"
-    end
+    @unicode_black = "\u2656"
+    @unicode_white = "\u265C"
   end
 end
 
@@ -54,16 +41,8 @@ class Knight < ChessPiece
     @name = 'knight'
     @default_symbol = 'K'
     @color = color
-    set_unicode(color)
-  end
-
-  def set_unicode(color)
-    case color
-    when 'black'
-      self.unicode = "\u2658"
-    when 'white'
-      self.unicode = "\u265E"
-    end
+    @unicode_black = "\u2658"
+    @unicode_white = "\u265E"
   end
 end
 
@@ -72,16 +51,8 @@ class Bishop < ChessPiece
     @name = 'bishop'
     @default_symbol = 'B'
     @color = color
-    set_unicode(color)
-  end
-
-  def set_unicode(color)
-    case color
-    when 'black'
-      self.unicode = "\u2657"
-    when 'white'
-      self.unicode = "\u265D"
-    end
+    @unicode_black = "\u2657"
+    @unicode_white = "\u265D"
   end
 end
 
@@ -90,16 +61,8 @@ class Queen < ChessPiece
     @name = 'queen'
     @default_symbol = 'Q'
     @color = color
-    set_unicode(color)
-  end
-
-  def set_unicode(color)
-    case color
-    when 'black'
-      self.unicode = "\u2655"
-    when 'white'
-      self.unicode = "\u265B"
-    end
+    @unicode_black = "\u2655"
+    @unicode_white = "\u265B"
   end
 end
 
@@ -108,15 +71,7 @@ class King < ChessPiece
     @name = 'king'
     @default_symbol = 'K'
     @color = color
-    set_unicode(color)
-  end
-
-  def set_unicode(color)
-    case color
-    when 'black'
-      self.unicode = "\u2654"
-    when 'white'
-      self.unicode = "\u265A"
-    end
+    @unicode_black = "\u2654"
+    @unicode_white = "\u265A"
   end
 end
