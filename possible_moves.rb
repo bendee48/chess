@@ -22,7 +22,7 @@ class PossibleMoves
       self.create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = game.return_piece(next_move)
         (valid_moves << next_move; next) if piece == '-'
-        break if self.break_conditions(next_move, player, piece)
+        break if self.break_conditions(player, piece)
         if piece.is_a?(ChessPiece) && 
            piece.color != player.color
            valid_moves << next_move
@@ -42,7 +42,7 @@ class PossibleMoves
       self.create_moves(start, add_to_let, add_to_num ) do |next_move|
         piece = game.return_piece(next_move)
         (valid_moves << next_move; next) if piece == '-'
-        break if self.break_conditions(next_move, player, piece)
+        break if self.break_conditions(player, piece)
         if piece.is_a?(ChessPiece) && 
            piece.color != player.color
            valid_moves << next_move
@@ -67,7 +67,7 @@ class PossibleMoves
         piece = game.return_piece(next_move)
         #break instead of next for 1 move pieces
         (valid_moves << next_move; break) if piece == '-'
-        break if self.break_conditions(next_move, player, piece)
+        break if self.break_conditions(player, piece)
         if piece.is_a?(ChessPiece) && 
            piece.color != player.color
            valid_moves << next_move
@@ -88,7 +88,7 @@ class PossibleMoves
         piece = game.return_piece(next_move)
         #break instead of next for 1 move pieces
         (valid_moves << next_move; break) if piece == '-'
-        break if self.break_conditions(next_move, player, piece)
+        break if self.break_conditions(player, piece)
         if piece.is_a?(ChessPiece) && 
            piece.color != player.color
            valid_moves << next_move
@@ -144,8 +144,8 @@ class PossibleMoves
   end
 
   private
-## move??
-  def self.break_conditions(move, player, piece)
+
+  def self.break_conditions(player, piece)
     piece.color == player.color ||
     (piece.is_a?(King) && piece.color != player.color)
   end
