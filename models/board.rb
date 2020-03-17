@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './../pieces'
+require_relative './../models/pieces'
 
 class Board
   attr_accessor :row_1, :row_2, :row_3, :row_4,

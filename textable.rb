@@ -1,5 +1,5 @@
-require './models/board'
-require './pieces'
+require_relative './models/board'
+require_relative './models/pieces'
 
 module Textable
   @board = Board.new

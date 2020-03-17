@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './../pieces'
+require_relative './../models/pieces'
 require_relative './../game'
 require_relative './../models/player'
 require_relative './../check'
