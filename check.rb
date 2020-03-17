@@ -1,4 +1,5 @@
 require './moves'
+require './possible_moves'
 
 class Check
   attr_reader :game
@@ -12,7 +13,7 @@ class Check
     checks = check_directions(player)
     checks.each do |key, check|
       check.each do |_, move|
-        game.create_moves(king_coords, *move) do |next_move|
+        PossibleMoves.create_moves(king_coords, *move) do |next_move|
           piece = game.return_piece(next_move)
           if [:knight, :pawn_attack].include?(key)
             break if piece == '-'
@@ -90,7 +91,7 @@ class Check
 
   def move_stops_check?(indices, piece, player)
     start = return_coords(indices)
-    possible_moves = game.send("possible_#{piece}_moves", start, player)
+    possible_moves = PossibleMoves.send("#{piece}", start, player, game)
     possible_moves.each do |finish|
       game.move_piece(start, finish)
       unless check?(player)

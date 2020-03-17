@@ -7,6 +7,7 @@ require './moves'
 require './save'
 require './textable'
 require './check'
+require './possible_moves'
 
 class Game
   include Validation
@@ -58,7 +59,7 @@ class Game
       board.display_board
       @check_if = Check.new(self)
       game_over if @check_if.check_mate?(player)
-      puts "You're in check" if @check.check?(player)
+      puts "You're in check" if @check_if.check?(player)
       make_move(player)
       game_over if @check_if.check_mate?(player)
     end
@@ -82,37 +83,37 @@ class Game
    
     case start_piece
     when 'pawn'
-      possible_moves = possible_pawn_moves(start, player)
+      possible_moves = PossibleMoves.pawn(start, player, self)
       move_validated_piece(start, finish, possible_moves)
     when 'rook'
-      possible_moves = possible_rook_moves(start, player)
+      possible_moves = PossibleMoves.rook(start, player, self)
       move_validated_piece(start, finish, possible_moves)
     when 'bishop'
-      possible_moves = possible_bishop_moves(start, player)
+      possible_moves = PossibleMoves.bishop(start, player, self)
       move_validated_piece(start, finish, possible_moves)
     when 'queen'
-      possible_moves = possible_queen_moves(start, player)
+      possible_moves = PossibleMoves.queen(start, player, self)
       move_validated_piece(start, finish, possible_moves)
     when 'king'
-      possible_moves = possible_king_moves(start, player)
+      possible_moves = PossibleMoves.king(start, player, self)
       move_validated_piece(start, finish, possible_moves)
     when 'knight'
-      possible_moves = possible_knight_moves(start, player)
+      possible_moves = PossibleMoves.knight(start, player, self)
       move_validated_piece(start, finish, possible_moves)
     end
   end
 
-  # yields next possble move to block.
-  # use block to set break conditions
-  def create_moves(start, add_to_let, add_to_num)
-    letter, number = start.scan(/[a-z]|\d+/)
-    loop do
-      letter = (letter.ord + add_to_let).chr
-      number = number.to_i + add_to_num
-      break unless ('a'..'h').include?(letter) && (1..8).include?(number)
-      yield("#{letter}#{number}")   
-    end
-  end
+  # # yields next possble move to block.
+  # # use block to set break conditions
+  # def create_moves(start, add_to_let, add_to_num)
+  #   letter, number = start.scan(/[a-z]|\d+/)
+  #   loop do
+  #     letter = (letter.ord + add_to_let).chr
+  #     number = number.to_i + add_to_num
+  #     break unless ('a'..'h').include?(letter) && (1..8).include?(number)
+  #     yield("#{letter}#{number}")   
+  #   end
+  # end
 
   def move_piece(start, finish)
     start_piece = return_piece(start)
@@ -198,138 +199,138 @@ class Game
     moves.include?(finish)
   end
 
-  def break_conditions(move, player, piece)
-    piece.color == player.color ||
-    (piece.is_a?(King) && piece.color != player.color)
-  end
+  # def break_conditions(move, player, piece)
+  #   piece.color == player.color ||
+  #   (piece.is_a?(King) && piece.color != player.color)
+  # end
 
-  def possible_pawn_moves(start, player)
-    valid_moves = []
-    movements = Moves.pawn(player)
+  # def possible_pawn_moves(start, player)
+  #   valid_moves = []
+  #   movements = Moves.pawn(player)
 
-    movements.each do |__, move|
-      add_to_let, add_to_num = move
-      current_num = start[1].to_i
-      create_moves(start, add_to_let, add_to_num ) do |next_move|
-        piece = return_piece(next_move)
-        break if piece != '-'
-        if piece == '-' && current_num == 2 && player.color == 'black' ||
-           piece = '-' && current_num == 7 && player.color == 'white'
-           valid_moves << next_move
-           current_num += 1
-           next
-        else
-          valid_moves << next_move
-          break
-        end
-      end
-    end
-    valid_moves += pawn_attack_moves(start, player)
-  end
+  #   movements.each do |__, move|
+  #     add_to_let, add_to_num = move
+  #     current_num = start[1].to_i
+  #     create_moves(start, add_to_let, add_to_num ) do |next_move|
+  #       piece = return_piece(next_move)
+  #       break if piece != '-'
+  #       if piece == '-' && current_num == 2 && player.color == 'black' ||
+  #          piece = '-' && current_num == 7 && player.color == 'white'
+  #          valid_moves << next_move
+  #          current_num += 1
+  #          next
+  #       else
+  #         valid_moves << next_move
+  #         break
+  #       end
+  #     end
+  #   end
+  #   valid_moves += pawn_attack_moves(start, player)
+  # end
 
-  def pawn_attack_moves(start, player)
-    valid_moves = []
-    movements = Moves.pawn_attack(player)
+  # def pawn_attack_moves(start, player)
+  #   valid_moves = []
+  #   movements = Moves.pawn_attack(player)
 
-    movements.each do |__, move|
-      add_to_let, add_to_num = move
-      create_moves(start, add_to_let, add_to_num ) do |next_move|
-        piece = return_piece(next_move)
-        if piece.is_a?(ChessPiece) && piece.color != player.color &&
-          piece.name != 'king'
-          valid_moves << next_move
-          break
-        else
-          break
-        end
-      end
-    end
-    valid_moves
-  end
+  #   movements.each do |__, move|
+  #     add_to_let, add_to_num = move
+  #     create_moves(start, add_to_let, add_to_num ) do |next_move|
+  #       piece = return_piece(next_move)
+  #       if piece.is_a?(ChessPiece) && piece.color != player.color &&
+  #         piece.name != 'king'
+  #         valid_moves << next_move
+  #         break
+  #       else
+  #         break
+  #       end
+  #     end
+  #   end
+  #   valid_moves
+  # end
 
-  def possible_rook_moves(start, player)
-    valid_moves = []
-    movements = Moves.horizontal_vertical
+  # def possible_rook_moves(start, player)
+  #   valid_moves = []
+  #   movements = Moves.horizontal_vertical
 
-    movements.each do |__, move|
-      add_to_let, add_to_num = move
-      create_moves(start, add_to_let, add_to_num ) do |next_move|
-        piece = return_piece(next_move)
-        (valid_moves << next_move; next) if piece == '-'
-        break if break_conditions(next_move, player, piece)
-        if piece.is_a?(ChessPiece) && 
-           piece.color != player.color
-           valid_moves << next_move
-           break
-        end
-      end
-    end
-    valid_moves
-  end
+  #   movements.each do |__, move|
+  #     add_to_let, add_to_num = move
+  #     create_moves(start, add_to_let, add_to_num ) do |next_move|
+  #       piece = return_piece(next_move)
+  #       (valid_moves << next_move; next) if piece == '-'
+  #       break if break_conditions(next_move, player, piece)
+  #       if piece.is_a?(ChessPiece) && 
+  #          piece.color != player.color
+  #          valid_moves << next_move
+  #          break
+  #       end
+  #     end
+  #   end
+  #   valid_moves
+  # end
 
-  def possible_bishop_moves(start, player)
-    valid_moves = []
-    movements = Moves.diagonal
+  # def possible_bishop_moves(start, player)
+  #   valid_moves = []
+  #   movements = Moves.diagonal
 
-    movements.each do |__, move|
-      add_to_let, add_to_num = move
-      create_moves(start, add_to_let, add_to_num ) do |next_move|
-        piece = return_piece(next_move)
-        (valid_moves << next_move; next) if piece == '-'
-        break if break_conditions(next_move, player, piece)
-        if piece.is_a?(ChessPiece) && 
-           piece.color != player.color
-           valid_moves << next_move
-           break
-        end
-      end
-    end
-    valid_moves
-  end
+  #   movements.each do |__, move|
+  #     add_to_let, add_to_num = move
+  #     create_moves(start, add_to_let, add_to_num ) do |next_move|
+  #       piece = return_piece(next_move)
+  #       (valid_moves << next_move; next) if piece == '-'
+  #       break if break_conditions(next_move, player, piece)
+  #       if piece.is_a?(ChessPiece) && 
+  #          piece.color != player.color
+  #          valid_moves << next_move
+  #          break
+  #       end
+  #     end
+  #   end
+  #   valid_moves
+  # end
 
-  def possible_queen_moves(start, player)
-    possible_rook_moves(start, player) + possible_bishop_moves(start, player)
-  end
+  # def possible_queen_moves(start, player)
+  #   possible_rook_moves(start, player) + possible_bishop_moves(start, player)
+  # end
 
-  def possible_king_moves(start, player)
-    valid_moves = []
-    movements = Moves.diagonal.merge(Moves.horizontal_vertical)
+  # def possible_king_moves(start, player)
+  #   valid_moves = []
+  #   movements = Moves.diagonal.merge(Moves.horizontal_vertical)
 
-    movements.each do |__, move|
-      add_to_let, add_to_num = move
-      create_moves(start, add_to_let, add_to_num ) do |next_move|
-        piece = return_piece(next_move)
-        #break instead of next for 1 move pieces
-        (valid_moves << next_move; break) if piece == '-'
-        break if break_conditions(next_move, player, piece)
-        if piece.is_a?(ChessPiece) && 
-           piece.color != player.color
-           valid_moves << next_move
-           break
-        end
-      end
-    end
-    valid_moves
-  end
+  #   movements.each do |__, move|
+  #     add_to_let, add_to_num = move
+  #     create_moves(start, add_to_let, add_to_num ) do |next_move|
+  #       piece = return_piece(next_move)
+  #       #break instead of next for 1 move pieces
+  #       (valid_moves << next_move; break) if piece == '-'
+  #       break if break_conditions(next_move, player, piece)
+  #       if piece.is_a?(ChessPiece) && 
+  #          piece.color != player.color
+  #          valid_moves << next_move
+  #          break
+  #       end
+  #     end
+  #   end
+  #   valid_moves
+  # end
 
-  def possible_knight_moves(start, player)
-    valid_moves = []
-    movements = Moves.knight
+  # def possible_knight_moves(start, player)
+  #   valid_moves = []
+  #   movements = Moves.knight
 
-    movements.each do |__, move|
-      add_to_let, add_to_num = move
-      create_moves(start, add_to_let, add_to_num ) do |next_move|
-        piece = return_piece(next_move)
-        #break instead of next for 1 move pieces
-        (valid_moves << next_move; break) if piece == '-'
-        break if break_conditions(next_move, player, piece)
-        if piece.is_a?(ChessPiece) && 
-           piece.color != player.color
-           valid_moves << next_move
-           break
-        end
-      end
-    end
-    valid_moves
-  end
+  #   movements.each do |__, move|
+  #     add_to_let, add_to_num = move
+  #     create_moves(start, add_to_let, add_to_num ) do |next_move|
+  #       piece = return_piece(next_move)
+  #       #break instead of next for 1 move pieces
+  #       (valid_moves << next_move; break) if piece == '-'
+  #       break if break_conditions(next_move, player, piece)
+  #       if piece.is_a?(ChessPiece) && 
+  #          piece.color != player.color
+  #          valid_moves << next_move
+  #          break
+  #       end
+  #     end
+  #   end
+  #   valid_moves
+  # end
 end
