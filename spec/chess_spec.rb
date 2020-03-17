@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require './pieces'
-require './game'
-require './player'
-require './check'
+require_relative './../pieces'
+require_relative './../game'
+require_relative './../models/player'
+require_relative './../check'
 
 #change tests to use set piece & integration test
 
@@ -171,7 +171,7 @@ describe Game do
       expect(game.board.row_4[1]).to eql rook
     end
 
-    it "isn't allowed to move past it's own pieces" do
+    it "isn't allowed to move past it's own ../pieces" do
       allow(game).to receive(:puts).and_return(nil)
       game.player_move('d4', 'd2', player)
       expect(game.board.row_4[3]).to eql rook
@@ -224,7 +224,7 @@ describe Game do
       expect(game.board.row_4[2]).to eql bishop
     end
 
-    it "isn't allowed to move past it's own pieces" do
+    it "isn't allowed to move past it's own ../pieces" do
       allow(game).to receive(:puts).and_return(nil)
       game.player_move('d3', 'f1', player)
       expect(game.board.row_3[3]).to eql bishop
@@ -301,7 +301,7 @@ describe Game do
       expect(game.board.row_6[1]).to eql queen
     end
 
-    it "isn't allowed to move past it's own pieces" do
+    it "isn't allowed to move past it's own ../pieces" do
       allow(game).to receive(:puts).and_return(nil)
       game.player_move('d4', 'b2', player)
       expect(game.board.row_4[3]).to eql queen
@@ -375,7 +375,7 @@ describe Game do
       expect(game.board.row_5[2]).to eql king
     end
 
-    it "isn't allowed to move past it's own pieces" do
+    it "isn't allowed to move past it's own ../pieces" do
       allow(game).to receive(:puts).and_return(nil)
       game.player_move('d4', 'd3', player)
       game.player_move('d3', 'd2', player)
@@ -461,7 +461,7 @@ describe Game do
       expect(game.board.row_6[2]).to eql knight
     end
 
-    it "it jumps over it's own pieces" do
+    it "it jumps over it's own ../pieces" do
       game.board.row_2.map! { |_sq| sq = Pawn.new('black') }
       game.player_move('b1', 'c3', player)
       expect(game.board.row_1[1]).to eql '-'

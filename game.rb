@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require './board'
-require './player'
-require './validation'
-require './moves'
-require './save'
-require './textable'
-require './check'
-require './possible_moves'
+require_relative './models/board'
+require_relative './models/player'
+require_relative './validation'
+require_relative './moves'
+require_relative './save'
+require_relative './textable'
+require_relative './check'
+require_relative './possible_moves'
 
 class Game
   include Validation

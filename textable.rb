@@ -1,4 +1,4 @@
-require './board'
+require './models/board'
 require './pieces'
 
 module Textable
