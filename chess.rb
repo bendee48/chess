@@ -1,3 +1,4 @@
 # frozen_string_literal: true
+require './game'
 
-puts "The ruby chess game \u265E \u265A \u2654."
+Game.new.start
