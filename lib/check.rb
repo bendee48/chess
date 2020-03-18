@@ -1,5 +1,5 @@
-require './moves'
-require './possible_moves'
+require_relative 'moves'
+require_relative 'possible_moves'
 
 class Check
   attr_reader :game

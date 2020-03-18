@@ -1,4 +1,4 @@
-require './moves'
+require_relative 'moves'
 
 class PossibleMoves
   # yields next possble move to block.

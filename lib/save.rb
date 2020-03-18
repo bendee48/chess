@@ -1,5 +1,5 @@
-require './game'
 require 'yaml'
+require_relative 'game'
 
 module SaveGame
   def self.save(game)
