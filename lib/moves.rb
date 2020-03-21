@@ -32,4 +32,8 @@ class Moves
       left_down1: [-2, -1], left_down2: [-1, -2], up_left1: [1, -2], up_left2: [2, -1]
     }
   end
+
+  def self.king 
+    @king ||= self.diagonal.merge(self.horizontal_vertical)
+  end
 end

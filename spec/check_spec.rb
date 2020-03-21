@@ -15,14 +15,14 @@ describe Check do
 
   describe "#check?" do
     context "Player2 checks Player1" do
-      it "returns true for a bishop checking a king" do
+      it "returns true for a Bishop checking a King" do
         game.set_piece('c8', '-')
         game.set_piece('d2', '-')
         game.set_piece('c3', Bishop.new('white'))
         expect(check_if.check?(player1)).to eql true
       end
     
-      it "returns true for a rook checking a king" do
+      it "returns true for a Rook checking a King" do
         game.set_piece('e2', '-')
         game.set_piece('h8', '-')
         game.set_piece('f5', Rook.new('white'))
@@ -30,14 +30,14 @@ describe Check do
         expect(check_if.check?(player1)).to eql true
       end
     
-      it "returns true for a knight checking a king" do
+      it "returns true for a Knight checking a King" do
         game.set_piece('g8', '-')
         game.set_piece('g5', Knight.new('white'))
         game.player_move('g5', 'f3', player2)
         expect(check_if.check?(player1)).to eql true
       end
     
-      it "returns true for a pawn checking a king" do
+      it "returns true for a Pawn checking a King" do
         game.set_piece('e1', '-')
         game.set_piece('e8', '-')
         game.set_piece('f4', King.new('black'))
@@ -46,6 +46,15 @@ describe Check do
         game.player_move('g7', 'g5', player2)
         expect(check_if.check?(player1)).to eql true
         expect(check_if.check?(player2)).to eql true
+      end
+
+      it "returns true for a King checking a King" do
+        game.set_piece('e1', '-')
+        game.set_piece('e8', '-')
+        game.set_piece('d4', King.new('black'))
+        game.set_piece('e6', King.new('white'))
+        game.player_move('e6', 'd5', player2)
+        expect(check_if.check?(player1)).to eql true
       end
     end
     
@@ -128,7 +137,7 @@ describe Check do
           expect(check_if.check?(player1)).to eql false
         end
 
-        it "returns false for a pawn attack being 2 moves away" do
+        it "returns false for a Pawn attack being 2 moves away" do
           game.set_piece('e1', '-')
           game.set_piece('e8', '-')
           game.set_piece('f4', King.new('black'))
@@ -163,7 +172,6 @@ describe Check do
         game.board.empty
         game.set_piece('a1', King.new('black'))
         game.set_piece('b3', Queen.new('white'))
-        game.board.display_board
         expect(check_if.check_mate?(player1)).to eql true
       end
     end

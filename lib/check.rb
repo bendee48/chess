@@ -17,6 +17,7 @@ class Check
           piece = game.return_piece(next_move)
           break if piece == '-' && path_key == :knight
           break if piece == '-' && path_key == :pawn_attack
+          break if piece == '-' && path_key == :king
           next if piece == '-'
           break if piece.color == player.color
           if path_key == :diagonal && %w(bishop queen).include?(piece.name) 
@@ -26,6 +27,8 @@ class Check
           elsif path_key == :knight && %w(knight).include?(piece.name)
             return true
           elsif path_key == :pawn_attack && %w(pawn).include?(piece.name)
+            return true
+          elsif path_key == :king && %w(king).include?(piece.name)
             return true
           else
             break
@@ -76,7 +79,8 @@ class Check
   def check_directions(player)
     {
       diagonal: Moves.diagonal, horiz_vert: Moves.horizontal_vertical, 
-      knight: Moves.knight, pawn_attack: Moves.pawn_attack(player)              
+      knight: Moves.knight, pawn_attack: Moves.pawn_attack(player),
+      king: Moves.king             
     }
   end
 
