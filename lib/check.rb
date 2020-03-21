@@ -30,32 +30,6 @@ class Check
           else
             break
           end
-          
-        
-          # unless path_key == :horiz_vert && %w(queen rook).include?(piece.name)
-          #   break
-          # else
-          #   return true
-          # end
-          # next if piece == '-' #|| (piece == '-' && (path_key == :knight || path_key == :pawn_attack))
-          # break if piece.is_a?(ChessPiece) && piece.color == player.color
-          # if path_key == :horiz_vert && %w(queen rook).include?(piece.name)
-          #   return true
-          # elsif path_key == :diagonal && %w(bishop queen).include?(piece.name)
-          #   return true
-          # elsif 
-          # else
-          #   break
-          # end
-          # puts "#{path_key}:#{piece}"
-          # puts next_move
-            # king attack
-          # puts "#{path_key}: #{dir_name}"
-          # puts "#{next_move}: #{piece}"
-          # break if piece.is_a?(ChessPiece) && piece.color == player.color
-          # p "made it this far #{next_move}: #{piece}"
-          # p "with #{path_key}"
-          # return true if check_booleans(piece, path_key, player)
         end
       end
     end

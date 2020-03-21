@@ -142,15 +142,30 @@ describe Check do
   end
 
   describe "#check_mate?" do
-    it "should return true if checkmate" do
-      king = King.new('black')
-      queen = Queen.new('white')
-      game.set_piece('e1', '-')
-      game.set_piece('d8', '-')
-      game.set_piece('a3', king)
-      game.set_piece('b5', queen)
-      game.board.display_board
-      expect(check_if.check_mate?(player1)).to eql true
+    let(:king) { King.new('black') }
+    let(:queen) { Queen.new('white') }
+    let(:rook) { Rook.new('white') }
+
+    context "King is in check" do
+      it "should return true if checkmate" do
+        game.set_piece('e1', '-')
+        game.set_piece('d8', '-')
+        game.set_piece('a8', '-')
+        game.set_piece('a3', king)
+        game.set_piece('b5', queen)
+        game.set_piece('a5', rook)
+        expect(check_if.check_mate?(player1)).to eql true
+      end
+    end
+
+    context "King isn't in check" do
+      it "should return true if checkmate" do
+        game.board.empty
+        game.set_piece('a1', King.new('black'))
+        game.set_piece('b3', Queen.new('white'))
+        game.board.display_board
+        expect(check_if.check_mate?(player1)).to eql true
+      end
     end
   end
 end
