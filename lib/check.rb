@@ -15,20 +15,10 @@ class Check
       direction.each do |dir_name, move_nums|
         PossibleMoves.create_moves(king_coords, *move_nums) do |next_move|
           piece = game.return_piece(next_move)
-          break if piece == '-' && path_key == :knight
-          break if piece == '-' && path_key == :pawn_attack
-          break if piece == '-' && path_key == :king
+          break if one_move?(piece, path_key)
           next if piece == '-'
           break if piece.color == player.color
-          if path_key == :diagonal && %w(bishop queen).include?(piece.name) 
-            return true
-          elsif path_key == :horiz_vert && %w(rook queen).include?(piece.name)
-            return true
-          elsif path_key == :knight && %w(knight).include?(piece.name)
-            return true
-          elsif path_key == :pawn_attack && %w(pawn).include?(piece.name)
-            return true
-          elsif path_key == :king && %w(king).include?(piece.name)
+          if is_check?(path_key, piece)
             return true
           else
             break
@@ -37,7 +27,7 @@ class Check
       end
     end
     false
-  end
+  end  
 
   def check_mate?(player)
     game.board.return_board.each_with_index do |row, ind|
@@ -63,17 +53,6 @@ class Check
       end
     end
     true
-  end
-
-  def check_booleans(piece, key, player)
-    (%w(bishop queen).include?(piece.name) && 
-      piece.color != player.color && key == :diagonal) ||
-      (%w(rook queen).include?(piece.name) && 
-      piece.color != player.color && key == :horiz_vert) ||
-      (%w(knight).include?(piece.name) && 
-      piece.color != player.color && key == :knight) ||
-      (%w(pawn).include?(piece.name) && 
-      piece.color != player.color && key == :pawn_attack)
   end
 
   def check_directions(player)
@@ -113,5 +92,21 @@ class Check
       game.reverse_move([start, finish])
     end
     false
+  end
+
+  private
+
+  def one_move?(piece, path_key)
+    piece == '-' && (path_key == :knight ||
+      path_key == :pawn_attack ||
+      path_key == :king)
+  end
+
+  def is_check?(path_key, piece)
+    path_key == :diagonal && %w(bishop queen).include?(piece.name) ||
+    path_key == :horiz_vert && %w(rook queen).include?(piece.name) ||
+    path_key == :knight && %w(knight).include?(piece.name) ||
+    path_key == :pawn_attack && %w(pawn).include?(piece.name) ||
+    path_key == :king && %w(king).include?(piece.name)
   end
 end
