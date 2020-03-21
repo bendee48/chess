@@ -10,22 +10,56 @@ class Check
 
   def check?(player)
     king_coords = return_coords(find_king(player))
-    checks = check_directions(player)
-    checks.each do |key, check|
-      check.each do |_, move|
-        PossibleMoves.create_moves(king_coords, *move) do |next_move|
+    directions = check_directions(player)
+    directions.each do |path_key, direction|
+      direction.each do |dir_name, move_nums|
+        PossibleMoves.create_moves(king_coords, *move_nums) do |next_move|
           piece = game.return_piece(next_move)
-          if [:knight, :pawn_attack].include?(key)
-            break if piece == '-'
+          break if piece == '-' && path_key == :knight
+          break if piece == '-' && path_key == :pawn_attack
+          next if piece == '-'
+          break if piece.color == player.color
+          if path_key == :diagonal && %w(bishop queen).include?(piece.name) 
+            return true
+          elsif path_key == :horiz_vert && %w(rook queen).include?(piece.name)
+            return true
+          elsif path_key == :knight && %w(knight).include?(piece.name)
+            return true
+          elsif path_key == :pawn_attack && %w(pawn).include?(piece.name)
+            return true
           else
-            next if piece == '-'
+            break
           end
-          break if piece.is_a?(ChessPiece) && piece.color == player.color
-          return true if check_booleans(piece, key, player)
+          
+        
+          # unless path_key == :horiz_vert && %w(queen rook).include?(piece.name)
+          #   break
+          # else
+          #   return true
+          # end
+          # next if piece == '-' #|| (piece == '-' && (path_key == :knight || path_key == :pawn_attack))
+          # break if piece.is_a?(ChessPiece) && piece.color == player.color
+          # if path_key == :horiz_vert && %w(queen rook).include?(piece.name)
+          #   return true
+          # elsif path_key == :diagonal && %w(bishop queen).include?(piece.name)
+          #   return true
+          # elsif 
+          # else
+          #   break
+          # end
+          # puts "#{path_key}:#{piece}"
+          # puts next_move
+            # king attack
+          # puts "#{path_key}: #{dir_name}"
+          # puts "#{next_move}: #{piece}"
+          # break if piece.is_a?(ChessPiece) && piece.color == player.color
+          # p "made it this far #{next_move}: #{piece}"
+          # p "with #{path_key}"
+          # return true if check_booleans(piece, path_key, player)
         end
       end
     end
-    return false
+    false
   end
 
   def check_mate?(player)

@@ -53,11 +53,11 @@ class Game
 
   def play    
     players = load_saved_player
+    @check_if = Check.new(self)
     loop do
       player = players.next
       self.current_player = player
       board.display_board
-      @check_if = Check.new(self)
       game_over if @check_if.check_mate?(player)
       puts "You're in check" if @check_if.check?(player)
       make_move(player)
