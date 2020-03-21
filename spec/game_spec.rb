@@ -10,7 +10,7 @@ describe Game do
   let(:player1) { Player.new('Dave', 'black') }
   let(:player2) { Player.new('Emma', 'white') }
 
-  context "#player_moves" do
+  context '#player_moves' do
     describe '#with Pawn' do
       it '1 up and replaces the previous square with a dash' do
         game.player_move('a2', 'a3', player1)
@@ -346,7 +346,7 @@ describe Game do
 
       it "can't move more than 1 square" do
         allow(game).to receive(:puts).and_return(nil)
-        game.player_move("d4", "d6", player1)
+        game.player_move('d4', 'd6', player1)
         expect(game.board.row_6[3]).to eql '-'
       end
     end

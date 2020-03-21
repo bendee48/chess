@@ -33,9 +33,9 @@ module Validation
   def validate_player_move(start, player)
     start_piece = return_piece(start)
     if start_piece == '-'
-      puts "No piece there."
+      puts 'No piece there.'
     elsif start_piece.color != player.color
-      puts "Not your piece to move."
+      puts 'Not your piece to move.'
     else
       start_piece = start_piece.name
     end

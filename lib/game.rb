@@ -28,16 +28,16 @@ class Game
   end
 
   def start
-    Textable::introduction
+    Textable.introduction
     answer = gets.chomp.strip.downcase
-    Textable::instructions if answer == 'i'
-    Textable::load
+    Textable.instructions if answer == 'i'
+    Textable.load
     answer = gets.chomp.strip.downcase
     answer == 'load' ? load_game : new_game
   end
 
   def load_game
-    game = SaveGame::load
+    game = SaveGame.load
     game.loaded_game = true
     game.play
   end
@@ -47,7 +47,7 @@ class Game
     play
   end
 
-  def play    
+  def play
     players = load_saved_player
     @check_if = Check.new(self)
     loop do
@@ -76,7 +76,7 @@ class Game
 
   def player_move(start, finish, player)
     start_piece = validate_player_move(start, player)
-   
+
     case start_piece
     when 'pawn'
       possible_moves = PossibleMoves.pawn(start, player, self)
@@ -104,7 +104,7 @@ class Game
     finish_piece = return_piece(finish)
     self.last_piece_taken = finish_piece
     set_piece(finish, start_piece)
-    set_piece(start, '-') 
+    set_piece(start, '-')
   end
 
   def reverse_move(move)
@@ -125,7 +125,7 @@ class Game
     board.return_board[num.to_i - 1][let.ord - 97] = piece
   end
 
-  private  
+  private
 
   def player_setup
     [1, 2].each do |num|
@@ -146,7 +146,7 @@ class Game
       answer = gets.chomp
       (save_game; break) if answer == 'save'
       unless valid_format?(answer)
-        puts "Invalid format."
+        puts 'Invalid format.'
         redo
       end
       answer = answer.split
@@ -165,8 +165,8 @@ class Game
   end
 
   def save_game
-    SaveGame::save(self)
-    puts "Game saved successfully."
+    SaveGame.save(self)
+    puts 'Game saved successfully.'
     exit(0)
   end
 

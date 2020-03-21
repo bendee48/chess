@@ -18,31 +18,31 @@ describe Check do
   let(:king_white) { King.new('white') }
   let(:king_black) { King.new('black') }
 
-  describe "#check?" do
-    context "Player2 checks Player1" do
-      it "returns true for a Bishop checking a King" do
+  describe '#check?' do
+    context 'Player2 checks Player1' do
+      it 'returns true for a Bishop checking a King' do
         game.set_piece('c8', '-')
         game.set_piece('d2', '-')
         game.set_piece('c3', bishop_white)
         expect(check_if.check?(player1)).to eql true
       end
-    
-      it "returns true for a Rook checking a King" do
+
+      it 'returns true for a Rook checking a King' do
         game.set_piece('e2', '-')
         game.set_piece('h8', '-')
         game.set_piece('f5', rook_white)
         game.player_move('f5', 'e5', player2)
         expect(check_if.check?(player1)).to eql true
       end
-    
-      it "returns true for a Knight checking a King" do
+
+      it 'returns true for a Knight checking a King' do
         game.set_piece('g8', '-')
         game.set_piece('g5', knight_white)
         game.player_move('g5', 'f3', player2)
         expect(check_if.check?(player1)).to eql true
       end
-    
-      it "returns true for a Pawn checking a King" do
+
+      it 'returns true for a Pawn checking a King' do
         game.set_piece('e1', '-')
         game.set_piece('e8', '-')
         game.set_piece('f4', king_black)
@@ -53,7 +53,7 @@ describe Check do
         expect(check_if.check?(player2)).to eql true
       end
 
-      it "returns true for a King checking a King" do
+      it 'returns true for a King checking a King' do
         game.set_piece('e1', '-')
         game.set_piece('e8', '-')
         game.set_piece('d4', king_black)
@@ -62,38 +62,38 @@ describe Check do
         expect(check_if.check?(player1)).to eql true
       end
     end
-    
-    context "Player1 moves into check" do
+
+    context 'Player1 moves into check' do
       before(:each) do
         game.set_piece('e1', '-')
         game.set_piece('e3', king_black)
       end
-    
-      it "returns true for Bishop checking King" do
+
+      it 'returns true for Bishop checking King' do
         game.set_piece('c8', '-')
         game.set_piece('a6', bishop_white)
         expect(check_if.check?(player1)).to eql false
         game.player_move('e3', 'd3', player1)
         expect(check_if.check?(player1)).to eql true
       end
-    
-      it "returns true for Queen checking King" do
+
+      it 'returns true for Queen checking King' do
         game.set_piece('d8', '-')
         game.set_piece('d6', queen_white)
         expect(check_if.check?(player1)).to eql false
         game.player_move('e3', 'd3', player1)
         expect(check_if.check?(player1)).to eql true
       end
-    
-      it "returns true for Rook checking King" do
+
+      it 'returns true for Rook checking King' do
         game.set_piece('h8', '-')
         game.set_piece('f6', rook_white)
         expect(check_if.check?(player1)).to eql false
         game.player_move('e3', 'f3', player1)
         expect(check_if.check?(player1)).to eql true
       end
-    
-      it "returns true for Pawn checking King" do
+
+      it 'returns true for Pawn checking King' do
         game.player_move('f7', 'f5', player2)
         expect(check_if.check?(player1)).to eql false
         game.player_move('e3', 'e4', player1)
@@ -102,14 +102,14 @@ describe Check do
     end
 
     describe "#check? isn't triggered incorrectly" do
-      context "piece blocks check" do
-        it "returns false for player piece blocking Bishop check" do
+      context 'piece blocks check' do
+        it 'returns false for player piece blocking Bishop check' do
           game.set_piece('c8', '-')
           game.set_piece('c3', knight_white)
           expect(check_if.check?(player1)).to eql false
         end
 
-        it "returns false for opposition piece blocking Bishop check" do
+        it 'returns false for opposition piece blocking Bishop check' do
           game.set_piece('c8', '-')
           game.set_piece('c7', '-')
           game.set_piece('b4', knight_white)
@@ -117,7 +117,7 @@ describe Check do
           expect(check_if.check?(player1)).to eql false
         end
 
-        it "returns false for opposition piece blocking Rook check" do
+        it 'returns false for opposition piece blocking Rook check' do
           game.set_piece('h8', '-')
           game.set_piece('h7', '-')
           game.set_piece('e2', '-')
@@ -126,7 +126,7 @@ describe Check do
           expect(check_if.check?(player1)).to eql false
         end
 
-        it "returns false for opposition piece blocking Queen check" do
+        it 'returns false for opposition piece blocking Queen check' do
           game.set_piece('h8', '-')
           game.set_piece('h7', '-')
           game.set_piece('e1', '-')
@@ -136,13 +136,13 @@ describe Check do
           expect(check_if.check?(player1)).to eql false
         end
 
-        it "returns false for a Knight being 2 moves away" do
+        it 'returns false for a Knight being 2 moves away' do
           game.set_piece('g8', '-')
           game.set_piece('g5', knight_white)
           expect(check_if.check?(player1)).to eql false
         end
 
-        it "returns false for a Pawn attack being 2 moves away" do
+        it 'returns false for a Pawn attack being 2 moves away' do
           game.set_piece('e1', '-')
           game.set_piece('e8', '-')
           game.set_piece('f4', king_black)
@@ -152,7 +152,7 @@ describe Check do
           expect(check_if.check?(player1)).to eql false
         end
 
-        it "returns false for a King attack being 2 moves away" do
+        it 'returns false for a King attack being 2 moves away' do
           game.set_piece('e1', '-')
           game.set_piece('e8', '-')
           game.set_piece('e3', king_black)
@@ -163,9 +163,9 @@ describe Check do
     end
   end
 
-  describe "#check_mate?" do
-    context "King is in check" do
-      it "should return true if checkmate" do
+  describe '#check_mate?' do
+    context 'King is in check' do
+      it 'should return true if checkmate' do
         game.set_piece('e1', '-')
         game.set_piece('d8', '-')
         game.set_piece('a8', '-')
@@ -177,7 +177,7 @@ describe Check do
     end
 
     context "King isn't in check" do
-      it "should return true if checkmate" do
+      it 'should return true if checkmate' do
         game.board.empty
         game.set_piece('a1', king_black)
         game.set_piece('b3', queen_white)
@@ -186,4 +186,3 @@ describe Check do
     end
   end
 end
-

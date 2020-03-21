@@ -22,7 +22,7 @@ class Board
     puts
     return_board.reverse_each do |row|
       row = row.map { |piece| piece.is_a?(ChessPiece) ? piece.unicode : piece }
-      puts sprintf(" #{num}  %s %s %s %s %s %s %s %s  #{num}", *row)
+      puts format(" #{num}  %s %s %s %s %s %s %s %s  #{num}", *row)
       num -= 1
     end
     puts
@@ -37,7 +37,7 @@ class Board
   private
 
   def create_board
-    (1..8).each do |num| 
+    (1..8).each do |num|
       instance_variable_set("@row_#{num}", Array.new(8, '-'))
     end
   end

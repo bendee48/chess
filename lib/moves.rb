@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Class that models piece movement
 class Moves
   def self.pawn(player)
@@ -17,8 +19,8 @@ class Moves
   end
 
   def self.diagonal
-    @diagonal ||= { 
-      up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1] 
+    @diagonal ||= {
+      up_right: [1, 1], up_left: [-1, 1], down_left: [-1, -1], down_right: [1, -1]
     }
   end
 
@@ -33,7 +35,7 @@ class Moves
     }
   end
 
-  def self.king 
-    @king ||= self.diagonal.merge(self.horizontal_vertical)
+  def self.king
+    @king ||= diagonal.merge(horizontal_vertical)
   end
 end

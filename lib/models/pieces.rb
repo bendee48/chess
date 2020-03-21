@@ -10,10 +10,10 @@ class ChessPiece
     @color = color
     @default_symbol = default_symbol
   end
-  
+
   def unicode
     color == 'black' ? @unicode_black : @unicode_white
-  end  
+  end
 end
 
 class Pawn < ChessPiece
