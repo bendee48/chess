@@ -15,7 +15,7 @@ module Textable
      "The aim is to beat your opponent by obtaining checkmate."; sleep 3
     puts "Each row to the board is represented by a number (1-8)."; sleep 3
     puts "Each column to the board is represented by a letter (A-H)."; sleep 3
-    puts "To make you're move enter the starting coordinates for the piece you wish to move."; sleep 3
+    puts "To make your move enter the starting coordinates for the piece you wish to move."; sleep 3
     puts "Followed by a space, and then the end coordinates for the piece you wish to move."; sleep 3
     self.move_piece
     puts "Either player can save and exit the game at any time by entering 'save' " \

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './../models/pieces'
+require_relative 'pieces'
 
 class Board
   attr_accessor :row_1, :row_2, :row_3, :row_4,
@@ -75,6 +75,5 @@ class Board
       end
     end
   end
-
   # add default symbol method
 end

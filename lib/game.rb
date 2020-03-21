@@ -33,11 +33,7 @@ class Game
     Textable::instructions if answer == 'i'
     Textable::load
     answer = gets.chomp.strip.downcase
-    if answer == 'load'
-      load_game
-    else
-      new_game
-    end
+    answer == 'load' ? load_game : new_game
   end
 
   def load_game
@@ -171,7 +167,7 @@ class Game
   def save_game
     SaveGame::save(self)
     puts "Game saved successfully."
-    exit
+    exit(0)
   end
 
   def move_validated_piece(start, finish, possible_moves)

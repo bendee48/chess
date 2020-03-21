@@ -5,27 +5,11 @@ require_relative '../lib/game'
 require_relative '../lib/models/player'
 require_relative '../lib/check'
 
-#change tests to use set piece & integration test
 describe Game do
   let(:game) { Game.new }
   let(:player1) { Player.new('Dave', 'black') }
   let(:player2) { Player.new('Emma', 'white') }
 
-  # describe "#player_setup" do
-  #   it "sets up players with correct names" do
-  #     allow(game).to receive(:gets).and_return("Ben", "black", "emma")
-  #     game.play
-  #     expect(game.player1).to eql "Ben"
-  #     expect(game.player2).to eql "Emma"
-  #   end
-
-  # it "sets up players with their correct colours" do
-  #   allow(game).to receive(:gets).and_return("Ben", "black", "emma")
-  #   game.play
-  #   expect(game.player1.color).to eql 'black'
-  #   expect(game.player2.color).to eql 'white'
-  #   # end
-  # end
   context "#player_moves" do
     describe '#with Pawn' do
       it '1 up and replaces the previous square with a dash' do

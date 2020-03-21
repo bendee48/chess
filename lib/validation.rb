@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# maybe change how validation works?
 module Validation
   def validate_name(num)
     loop do
