@@ -19,7 +19,7 @@ module SaveGame
       Game.new.new_game
     else
       read_file = File.read(file.first)
-      YAML.safe_load(read_file)
+      YAML.load(read_file)
     end
   end
 end
