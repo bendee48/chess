@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Module for input validation.
 module Validation
   def validate_name(num)
     loop do

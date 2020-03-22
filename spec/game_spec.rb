@@ -51,7 +51,8 @@ describe Game do
       end
 
       it 'recognises invalid moves' do
-        expect { game.player_move('a2', 'b2', player1) }.to output("Sorry, invalid move.\n").to_stdout
+        text = "Sorry, invalid move.\n"
+        expect { game.player_move('a2', 'b2', player1) }.to output(text).to_stdout
       end
     end
 
@@ -355,7 +356,7 @@ describe Game do
       let(:knight) { Knight.new('black') }
       before(:each) do
         game.set_piece('d4', knight)
-        game.board.row_2.map! { |_sq| sq = '-' }
+        game.board.row_2.map! { '-' }
       end
 
       it 'moves 2 up, 1 right' do
@@ -407,7 +408,7 @@ describe Game do
       end
 
       it "it jumps over it's own pieces" do
-        game.board.row_2.map! { |_sq| sq = Pawn.new('black') }
+        game.board.row_2.map! { Pawn.new('black') }
         game.player_move('b1', 'c3', player1)
         expect(game.board.row_1[1]).to eql '-'
         expect(game.board.row_3[2]).to be_a Knight

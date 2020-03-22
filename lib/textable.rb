@@ -3,6 +3,7 @@
 require_relative 'models/board'
 require_relative 'models/pieces'
 
+# Module for longer text prompts/ explanations for player.
 module Textable
   @board = Board.new
   @knight = Knight.new('black')
@@ -20,7 +21,7 @@ module Textable
     puts 'To make your move enter the starting coordinates for the piece you wish to move.'; sleep 3
     puts 'Followed by a space, and then the end coordinates for the piece you wish to move.'; sleep 3
     move_piece
-    puts "Either player can save and exit the game at any time by entering 'save' " \
+    puts "Either player can save and exit the game at any time by entering 'save'" \
       'when prompted to make their move.'; sleep 2
     puts 'Enjoy!'; sleep 2
   end

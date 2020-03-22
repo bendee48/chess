@@ -9,6 +9,7 @@ require_relative 'textable'
 require_relative 'check'
 require_relative 'possible_moves'
 
+# Class that holds game state and primary logic.
 class Game
   include Validation
 
@@ -54,10 +55,10 @@ class Game
       player = players.next
       self.current_player = player
       board.display_board
-      game_over if @check_if.check_mate?(player)
+      gameover_check(player)
       puts "You're in check" if @check_if.check?(player)
       make_move(player)
-      game_over if @check_if.check_mate?(player)
+      gameover_check(player)
     end
   end
 
@@ -67,11 +68,6 @@ class Game
     else
       [player1, player2].cycle
     end
-  end
-
-  def game_over
-    puts "That's checkmate. Game Over"
-    exit(0)
   end
 
   def player_move(start, finish, player)
@@ -110,7 +106,6 @@ class Game
   def reverse_move(move)
     finish, start = move
     start_piece = return_piece(start)
-    finish_piece = return_piece(finish)
     set_piece(finish, start_piece)
     set_piece(start, last_piece_taken)
   end
@@ -126,6 +121,13 @@ class Game
   end
 
   private
+
+  def gameover_check(player)
+    return unless @check_if.check_mate?(player)
+
+    puts "That's checkmate. Game Over."
+    exit(0)
+  end
 
   def player_setup
     [1, 2].each do |num|

@@ -3,6 +3,7 @@
 require 'yaml'
 require_relative 'game'
 
+# Module to save and load game.
 module SaveGame
   def self.save(game)
     Dir.mkdir('save_files') unless Dir.exist?('save_files')

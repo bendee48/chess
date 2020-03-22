@@ -3,6 +3,7 @@
 require_relative 'moves'
 require_relative 'possible_moves'
 
+# Class checks Game object for current state of check.
 class Check
   attr_reader :game
 
@@ -20,11 +21,9 @@ class Check
           break if one_move?(piece, path_key)
           next if piece == '-'
           break if piece.color == player.color
-          if is_check?(path_key, piece)
-            return true
-          else
-            break
-          end
+          return true if is_check?(path_key, piece)
+
+          break # or else break
         end
       end
     end
@@ -101,9 +100,8 @@ class Check
   private
 
   def one_move?(piece, path_key)
-    piece == '-' && (path_key == :knight ||
-      path_key == :pawn_attack ||
-      path_key == :king)
+    path_keys = %i[knight pawn_attack king]
+    piece == '-' && path_keys.include?(path_key)
   end
 
   def is_check?(path_key, piece)

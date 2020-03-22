@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# Class to model a Chess piece.
 class ChessPiece
-  attr_accessor :name, :moves, :unicode, :color, :default_symbol
+  attr_accessor :name, :moves, :color, :default_symbol
 
   def initialize(name = nil, color = nil, unicode = nil, default_symbol = nil)
     @name = name
@@ -16,6 +17,7 @@ class ChessPiece
   end
 end
 
+# Class to model a Pawn
 class Pawn < ChessPiece
   def initialize(color)
     @name = 'pawn'
@@ -26,6 +28,7 @@ class Pawn < ChessPiece
   end
 end
 
+# Class to model a Rook
 class Rook < ChessPiece
   def initialize(color)
     @name = 'rook'
@@ -36,6 +39,7 @@ class Rook < ChessPiece
   end
 end
 
+# Class to model a Knight
 class Knight < ChessPiece
   def initialize(color)
     @name = 'knight'
@@ -46,6 +50,7 @@ class Knight < ChessPiece
   end
 end
 
+# Class to model a Bishop
 class Bishop < ChessPiece
   def initialize(color)
     @name = 'bishop'
@@ -56,6 +61,7 @@ class Bishop < ChessPiece
   end
 end
 
+# Class to model a Queen
 class Queen < ChessPiece
   def initialize(color)
     @name = 'queen'
@@ -66,6 +72,7 @@ class Queen < ChessPiece
   end
 end
 
+# Class to model a King
 class King < ChessPiece
   def initialize(color)
     @name = 'king'

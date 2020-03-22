@@ -2,6 +2,7 @@
 
 require_relative 'moves'
 
+# Class to generate valid moves for a Chess piece from their current position.
 class PossibleMoves
   # yields next possble move to block.
   # use block to set break conditions
@@ -20,7 +21,7 @@ class PossibleMoves
     valid_moves = []
     movements = Moves.horizontal_vertical
 
-    movements.each do |__, move|
+    movements.each do |_, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num) do |next_move|
         piece = game.return_piece(next_move)
@@ -41,7 +42,7 @@ class PossibleMoves
     valid_moves = []
     movements = Moves.diagonal
 
-    movements.each do |__, move|
+    movements.each do |_, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num) do |next_move|
         piece = game.return_piece(next_move)
@@ -66,7 +67,7 @@ class PossibleMoves
     valid_moves = []
     movements = Moves.diagonal.merge(Moves.horizontal_vertical)
 
-    movements.each do |__, move|
+    movements.each do |_, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num) do |next_move|
         piece = game.return_piece(next_move)
@@ -88,7 +89,7 @@ class PossibleMoves
     valid_moves = []
     movements = Moves.knight
 
-    movements.each do |__, move|
+    movements.each do |_, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num) do |next_move|
         piece = game.return_piece(next_move)
@@ -110,48 +111,47 @@ class PossibleMoves
     valid_moves = []
     movements = Moves.pawn(player)
 
-    movements.each do |__, move|
+    movements.each do |_, move|
       add_to_let, add_to_num = move
       current_num = start[1].to_i
       create_moves(start, add_to_let, add_to_num) do |next_move|
         piece = game.return_piece(next_move)
         break if piece != '-'
 
-        if piece == '-' && current_num == 2 && player.color == 'black' ||
-           piece = '-' && current_num == 7 && player.color == 'white'
+        if move_two?(piece, current_num, player)
           valid_moves << next_move
           current_num += 1
           next
-        else
-          valid_moves << next_move
-          break
         end
+        valid_moves << next_move
+        break
       end
     end
     valid_moves += pawn_attack(start, player, game)
+  end
+
+  def self.move_two?(piece, current_num, player)
+    piece == '-' && current_num == 2 && player.color == 'black' ||
+      piece == '-' && current_num == 7 && player.color == 'white'
   end
 
   def self.pawn_attack(start, player, game)
     valid_moves = []
     movements = Moves.pawn_attack(player)
 
-    movements.each do |__, move|
+    movements.each do |_, move|
       add_to_let, add_to_num = move
       create_moves(start, add_to_let, add_to_num) do |next_move|
         piece = game.return_piece(next_move)
         if piece.is_a?(ChessPiece) && piece.color != player.color &&
            piece.name != 'king'
           valid_moves << next_move
-          break
-        else
-          break
         end
+        break
       end
     end
     valid_moves
   end
-
-  private
 
   def self.break_conditions(player, piece)
     piece.color == player.color ||

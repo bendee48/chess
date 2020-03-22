@@ -2,10 +2,10 @@
 
 require_relative 'pieces'
 
+# Class to model the Chess board
 class Board
   attr_accessor :row_1, :row_2, :row_3, :row_4,
-                :row_5, :row_6, :row_7, :row_8,
-                :empty
+                :row_5, :row_6, :row_7, :row_8
 
   def initialize
     create_board
