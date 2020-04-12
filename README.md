@@ -1,8 +1,6 @@
-# The Odin Project
-
 ### Ruby - Chess
 
-**A command line chess game project incorporating OOP, TDD, serialization and just about everything learned so far!**
+**A command line chess game project incorporating OOP, TDD, serialization and just about everything learned so far from The Odin Project!**
 
 ---
 
