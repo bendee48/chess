@@ -8,7 +8,7 @@ Standard chess rules. Enter 'i' in-game when prompted for instructions on how to
 
 To play, clone the repo and run `bundle install` then `ruby ./lib/chess.rb` or play via the repl.it below.
 
-note: You may have to change your console font if pieces are displayed correctly.
+note: You may have to change your console font if pieces are displayed incorrectly.
 
 [![Run on Repl.it](https://repl.it/badge/github/bendee48/chess)](https://repl.it/github/bendee48/chess)
 
